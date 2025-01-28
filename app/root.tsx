@@ -13,7 +13,6 @@ import Navigation from "./common/components/navigation";
 import { Settings } from "luxon";
 
 
-
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {

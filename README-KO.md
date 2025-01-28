@@ -34,3 +34,7 @@
         - components.js
 
 ex) npx shadcn@latest add separator
+
+
+### 이슈
+- [tailwindcss v4 버전 이슈](https://stackoverflow.com/questions/79383705/cannot-build-frontend-using-vite-tailwindcss-with-postcss)

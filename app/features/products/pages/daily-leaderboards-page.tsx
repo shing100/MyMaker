@@ -3,9 +3,9 @@ import type { Route } from "./+types/daily-leaderboards-page";
 import { data, isRouteErrorResponse, Link } from "react-router";
 import { z } from "zod";
 import { Alert, AlertDescription, AlertTitle } from "~/common/components/ui/alert";
-import { Hero } from "~/common/components/hero";
 import { ProductCard } from "../components/product-card";
 import { Button } from "~/common/components/ui/button";
+import { HyperText } from "~/common/components/ui/hyper-text";
 import ProductPagination from "~/common/components/product-pagination";
 
 const paramsSchema = z.object({
@@ -66,7 +66,14 @@ export default function DailyLeaderboardsPage({ loaderData }: Route.ComponentPro
     const isToday = urlDate.equals(DateTime.now().startOf("day"));
     return (
         <div className="space-y-10">
-            <Hero title={`${urlDate.toLocaleString(DateTime.DATE_MED)} 일간 베스트 상품`} />
+            <div className="flex items-center justify-center gap-2">
+                <span className="text-3xl font-semibold mr-2">
+                    {urlDate.toLocaleString(DateTime.DATE_SHORT)}
+                </span>
+                <HyperText className="flex items-center justify-center" duration={1000} delay={1000}>
+                    Daily Leaderboards
+                </HyperText>
+            </div>
             <div className="flex items-center justify-center gap-2">
                 <Button variant="secondary" asChild>
                     <Link to={`/products/leaderboards/daily/${previousDate.year}/${previousDate.month}/${previousDate.day}`}>
@@ -93,7 +100,7 @@ export default function DailyLeaderboardsPage({ loaderData }: Route.ComponentPro
                 ))}
                 <ProductPagination totalPages={10} />
             </div>
-        </div>
+        </div >
     );
 }
 
