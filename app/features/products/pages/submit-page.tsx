@@ -3,6 +3,10 @@ import { Hero } from "~/common/components/hero";
 import { Form } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import SelectPair from "~/common/components/select-pair";
+import { Input } from "~/common/components/ui/input";
+import { Label } from "~/common/components/ui/label";
+import { useState } from "react";
+import { Button } from "~/common/components/ui/button";
 
 
 export const meta: Route.MetaFunction = () => {
@@ -13,6 +17,13 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export default function SubmitPage() {
+    const [icon, setIcon] = useState<string | null>(null);
+    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            const file = event.target.files[0];
+            setIcon(URL.createObjectURL(file));
+        }
+    }
     return (
         <div>
             <Hero title="Submit Your Product" subtitle="Submit your product with the world" />
@@ -67,6 +78,34 @@ export default function SubmitPage() {
                             { label: "Marketer", value: "marketer" },
                         ]}
                     />
+                    <Button type="submit" className="w-full" size="lg">
+                        Submit
+                    </Button>
+                </div>
+                <div className="flex flex-col space-y-2">
+                    <div className="size-40 rounded-xl shadow-xl overflow-hidden">
+                        {icon ?
+                            <img src={icon} alt="icon" className="w-full h-full object-cover" />
+                            : null}
+                    </div>
+                    <Label className="flex flex-col gap-1 text-lg">
+                        Logo
+                        <small className="text-muted-foreground text-sm">
+                            This is the logo of your product
+                        </small>
+                    </Label>
+                    <Input type="file" className="w-1/2" onChange={onChange} required name="icon" multiple />
+                    <div className="flex flex-col text-xs">
+                        <span className="text-muted-foreground">
+                            Recommended size: 128x128
+                        </span>
+                        <span className="text-muted-foreground">
+                            Allowed file types: png, jpg, jpeg
+                        </span>
+                        <span className="text-muted-foreground">
+                            Max file size: 1MB
+                        </span>
+                    </div>
                 </div>
             </Form>
         </div>

@@ -23,9 +23,9 @@ export default function SelectPair({
     const [open, setOpen] = useState(false);
     return (
         <div className="space-y-2 flex flex-col">
-            <Label className="flex flex-col gap-1" onClick={() => setOpen(true)}>
+            <Label className="flex flex-col gap-1 text-lg" onClick={() => setOpen(true)}>
                 {label}
-                <small className="text-muted-foreground">
+                <small className="text-muted-foreground text-sm">
                     {description}
                 </small>
             </Label>
