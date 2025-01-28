@@ -77,7 +77,7 @@ export default function MonthlyLeaderboardsPage({ loaderData }: Route.ComponentP
     const isToday = urlDate.equals(DateTime.now().startOf("month"));
     return (
         <div className="space-y-10">
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex flex-col py-10 justify-center items-center rounded-md bg-gradient-to-t from-background to-primary/10">
                 <span className="text-3xl font-semibold mr-2">
                     {urlDate.toLocaleString({
                         month: "long",
