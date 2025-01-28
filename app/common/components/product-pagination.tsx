@@ -9,10 +9,8 @@ export default function ProductPagination({
     totalPages,
 }: ProductPaginationProps) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const page = Number(searchParams.get("page")) ?? 1;
-
+    const page = Number(searchParams.get("page") ?? 1);
     const onClick = (page: number) => {
-        console.log(page);
         searchParams.set("page", page.toString());
         setSearchParams(searchParams);
     };
