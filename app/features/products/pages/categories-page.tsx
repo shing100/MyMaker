@@ -1,4 +1,6 @@
+import { Hero } from "~/common/components/hero";
 import type { Route } from "./+types/categories-page";
+import { CategoryCard } from "../components/category-card";
 
 
 export const meta: Route.MetaFunction = () => {
@@ -14,8 +16,21 @@ export function loader({ }: Route.LoaderArgs) {
 
 export default function CategoriesPage() {
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold mb-4">Categories</h1>
+        <div className="space-y-10">
+            <Hero
+                title="Categories"
+                subtitle="Browse products by category"
+            />
+            <div className="grid grid-cols-4 gap-4">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <CategoryCard
+                        key={index}
+                        id="categoryId"
+                        name="Category Name"
+                        description="Category Description"
+                    />
+                ))}
+            </div>
         </div>
     );
 } 
