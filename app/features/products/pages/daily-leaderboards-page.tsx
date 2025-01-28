@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "~/common/components/ui/aler
 import { Hero } from "~/common/components/hero";
 import { ProductCard } from "../components/product-card";
 import { Button } from "~/common/components/ui/button";
+import ProductPagination from "~/common/components/product-pagination";
 
 const paramsSchema = z.object({
     year: z.string().regex(/^\d{4}$/).transform(Number),
@@ -90,6 +91,7 @@ export default function DailyLeaderboardsPage({ loaderData }: Route.ComponentPro
                         views={12}
                     />
                 ))}
+                <ProductPagination totalPages={10} />
             </div>
         </div>
     );

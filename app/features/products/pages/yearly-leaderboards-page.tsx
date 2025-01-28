@@ -1,4 +1,4 @@
-import type { Route } from "../../../types/routes.ts";
+import type { Route } from "./+types/yearly-leaderboards-page";
 
 export const meta: Route.MetaFunction = () => {
     return [
