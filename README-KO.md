@@ -12,6 +12,12 @@
         - React Router@7.0.1
         - TailwindCSS [https://tailwindcss.com/docs/installation]
         - Shadcn/UI [https://ui.shadcn.com/docs/components/separator]
+        - Zod [https://zod.dev/docs/getting-started/installation]
+        - Luxon [https://moment.github.io/luxon/docs/manual/installation]
+            - 날짜 및 시간 처리
+            - npm install --save luxon            
+            - npm install @types/luxon -D
+]
 
 ### 의존성 설치
 

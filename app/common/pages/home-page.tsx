@@ -2,13 +2,8 @@ import { Link } from "react-router";
 import { ProductCard } from "~/features/products/components/product-card";
 import type { MetaFunction } from "@remix-run/react";
 import { Button } from "../components/ui/button";
-import { AvatarFallback } from "@radix-ui/react-avatar";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
-import { Avatar, AvatarImage } from "../components/ui/avatar";
 import { PostCard } from "~/features/community/components/post-card";
-import { DotIcon, EyeIcon, HeartIcon } from "lucide-react";
 import { IdeaCard } from "~/features/ideas/components/idea-card";
-import { Badge } from "../components/ui/badge";
 import { JobCard } from "~/features/jobs/components/job-card";
 import { TeamCard } from "~/features/teams/components/team-card";
 
