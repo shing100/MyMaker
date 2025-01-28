@@ -13,9 +13,14 @@ const paramsSchema = z.object({
     week: z.string().regex(/^\d{1,2}$/).transform(Number)
 });
 
-export const meta: Route.MetaFunction = () => {
+export const meta: Route.MetaFunction = ({ params }) => {
+    const date = DateTime.fromObject({
+        weekYear: Number(params.year),
+        weekNumber: Number(params.week)
+    }).setZone("Asia/Seoul")
+        .setLocale("ko");
     return [
-        { title: "Weekly Leaderboards | MyMake" },
+        { title: `${date.startOf("week").toLocaleString(DateTime.DATE_SHORT)} - ${date.endOf("week").toLocaleString(DateTime.DATE_SHORT)} Leaderboards | MyMake` },
         { name: "description", content: "Best products of the week" }
     ];
 };

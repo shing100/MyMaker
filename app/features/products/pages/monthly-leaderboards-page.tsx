@@ -13,9 +13,19 @@ const paramsSchema = z.object({
     month: z.string().regex(/^\d{1,2}$/).transform(Number)
 });
 
-export const meta: Route.MetaFunction = () => {
+export const meta: Route.MetaFunction = ({ params }) => {
+    const date = DateTime.fromObject({
+        year: Number(params.year),
+        month: Number(params.month)
+    }).setZone("Asia/Seoul")
+        .setLocale("ko");
     return [
-        { title: "Monthly Leaderboards | MyMake" },
+        {
+            title: `${date.toLocaleString({
+                month: "long",
+                year: "2-digit"
+            })} Leaderboards | MyMake`
+        },
         { name: "description", content: "Best products of the month" }
     ];
 };
