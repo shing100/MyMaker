@@ -3,17 +3,14 @@ import type { MetaFunction } from "react-router";
 import { Hero } from "~/common/components/hero";
 import { Button } from "~/common/components/ui/button";
 
-
 export const meta: MetaFunction = () => {
     return [
-        { title: "IdeasGPT | MyMake" },
-        { name: "description", content: "IdeasGPT is a tool that helps you generate ideas for your business." }
+        { title: "Idea Details | MyMake" },
+        { name: "description", content: "Idea details" }
     ];
-}
+};
 
-
-
-export default function IdeasPage() {
+export default function IdeaPage() {
     return (
         <div className="space-y-20">
             <Hero title="Idea #392841" />
