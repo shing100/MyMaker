@@ -1,32 +1,38 @@
+import { Button } from "~/common/components/ui/button";
 import type { Route } from "./+types/product-reviews-page.types";
 import type { MetaFunction } from "react-router";
-
-export function loader({ params }: Route.LoaderArgs) {
-    return {
-        product: {
-            id: params.productId,
-            // ... 제품 데이터 로드
-        },
-        reviews: [
-            // ... 리뷰 데이터 로드
-        ]
-    };
-}
+import { Avatar, AvatarFallback, AvatarImage } from "~/common/components/ui/avatar";
+import { StarIcon } from "lucide-react";
+import { ReviewCard } from "../components/review-card";
 
 export const meta: MetaFunction = ({ data }) => {
     return [
-        { title: `${data.product.name} - Reviews` },
-        { name: "description", content: `Reviews for ${data.product.name}` }
+        { title: `Product Reviews | MyMake` },
+        { name: "description", content: `Product Reviews` }
     ];
 };
 
-export default function ProductReviewsPage({ loaderData }: Route.ComponentProps) {
-    const { product, reviews } = loaderData;
-
+export default function ProductReviewsPage() {
     return (
-        <div>
-            <h1>제품 리뷰</h1>
-            {/* 리뷰 목록 표시 */}
+        <div className="space-y-10 max-w-xl">
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">10 Reviews</h2>
+                <Button variant="secondary">Write a Review</Button>
+            </div>
+            <div className="space-y-20">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <ReviewCard
+                        key={index}
+                        avatarUrl="https://github.com/shadcn.png"
+                        avatarFallback="N"
+                        username="John Doe"
+                        handle="@username"
+                        rating={5}
+                        content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos."
+                        postedAt="10 days ago"
+                    />
+                ))}
+            </div>
         </div>
     );
 } 
