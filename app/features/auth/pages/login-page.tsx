@@ -2,6 +2,7 @@ import { Form, Link, type MetaFunction } from "react-router";
 import type { Route } from "./+types/login-page";
 import InputPair from "~/common/components/input-pair";
 import { Button } from "~/common/components/ui/button";
+import AuthButtons from "../components/auth-buttons";
 
 
 export const meta: MetaFunction = () => {
@@ -38,6 +39,7 @@ export default function LoginPage() {
                     />
                     <Button type="submit" className="w-full">로그인</Button>
                 </Form>
+                <AuthButtons />
             </div>
         </div>
     );
