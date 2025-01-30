@@ -23,7 +23,7 @@ export default function JobsPage() {
             <Hero title="Jobs" subtitle="Companies looking for talents" />
             <div className="grid grid-cols-6 gap-20 items-start">
                 <div className="grid grid-cols-3 col-span-4 gap-5">
-                    {Array.from({ length: 11 }).map((_, index) => (
+                    {Array.from({ length: 20 }).map((_, index) => (
                         <JobCard
                             key={index}
                             id="jobId"
@@ -38,7 +38,7 @@ export default function JobsPage() {
                         />
                     ))}
                 </div>
-                <div className="col-span-2 space-y-4">
+                <div className="col-span-2 space-y-4 sticky top-20">
                     <div className="flex flex-col items-start gap-2.5">
                         <h4 className="text-sm text-muted-foreground font-bold">Type</h4>
                         <div className="flex flex-wrap gap-2">
