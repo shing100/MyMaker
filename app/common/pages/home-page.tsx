@@ -63,6 +63,7 @@ export default function HomePage() {
                         authorAvatarUrl="https://github.com/apple.png"
                         category="Productivity"
                         createdAt="12 hours ago"
+                        votesCount={12}
                     />
                 ))}
             </div>
