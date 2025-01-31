@@ -1,5 +1,5 @@
 import type { MetaFunction } from "react-router";
-
+import { Outlet } from "react-router";
 
 export const meta: MetaFunction = () => {
     return [
@@ -9,10 +9,10 @@ export const meta: MetaFunction = () => {
 };
 
 
-export default function ProfilePage() {
+export default function ProfileLayout() {
     return (
-        <div className="grid grid-cols-2 gap-5">
-
+        <div className="space-y-10">
+            <Outlet />
         </div>
     );
-}
+} 
