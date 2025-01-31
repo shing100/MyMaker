@@ -54,6 +54,16 @@ export default function SettingsPage({ loaderData, actionData }: Route.Component
                             ]}
                         />
                         <InputPair
+                            label="Headline"
+                            description="An Instruction for your profile."
+                            placeholder="I'm a product designer and a startup enthusiast. I'm currently the co-founder and product designer."
+                            name="headline"
+                            id="headline"
+                            type="text"
+                            required
+                            textArea
+                        />
+                        <InputPair
                             label="Bio"
                             name="bio"
                             id="bio"

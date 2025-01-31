@@ -11,16 +11,17 @@ interface IdeaCardProps {
     likes: number;
     createdAt: string;
     claimed?: boolean;
+    isOwner?: boolean;
 }
 
-export function IdeaCard({ id, title, views, likes, createdAt, claimed }: IdeaCardProps) {
+export function IdeaCard({ id, title, views, likes, createdAt, claimed, isOwner }: IdeaCardProps) {
     return (
         <Card className="bg-transparent hover:bg-card/50 transition-colors">
             <CardHeader>
                 <Link to={`/ideas/${id}`}>
                     <CardTitle className="text-xl">
                         <span className={cn(
-                            claimed
+                            claimed && !isOwner
                                 ? "bg-muted-foreground selection:bg-muted-foreground text-muted-foreground"
                                 : " "
                         )}>
@@ -47,6 +48,11 @@ export function IdeaCard({ id, title, views, likes, createdAt, claimed }: IdeaCa
                         <Link to={`/ideas/${id}/claim`}>
                             Claim idea now &rarr;
                         </Link>
+                    </Button>
+                ) : isOwner ? (
+                    <Button variant="outline" disabled>
+                        <LockIcon className="size-4" />
+                        Your Private Idea
                     </Button>
                 ) : (
                     <Button variant="outline" disabled className="cursor-not-allowed">

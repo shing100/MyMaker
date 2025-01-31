@@ -1,5 +1,5 @@
 import type { MetaFunction } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "~/common/components/ui/card";
+import { IdeaCard } from "~/features/ideas/components/idea-card";
 
 
 export const meta: MetaFunction = () => {
@@ -13,18 +13,17 @@ export const meta: MetaFunction = () => {
 export default function ProfileIdeasPage() {
     return (
         <div className="space-y-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-                <Card key={i}>
-                    <CardHeader>
-                        <CardTitle>Idea {i + 1}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground">
-                            This is a detailed description of the idea.
-                            It explains the problem it solves and how it would work.
-                        </p>
-                    </CardContent>
-                </Card>
+            {Array.from({ length: 5 }).map((_, index) => (
+                <IdeaCard
+                    key={index}
+                    id="ideaId"
+                    title="A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progesss using a mobile app to track workouts and progress as well as a website to track progress and see your stats."
+                    views={123}
+                    likes={123}
+                    createdAt="12 hours ago"
+                    claimed
+                    isOwner
+                />
             ))}
         </div>
     );
