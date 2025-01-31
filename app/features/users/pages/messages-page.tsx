@@ -1,11 +1,12 @@
 import type { MetaFunction } from "react-router";
 import type { Route } from "./+types/messages-page";
+import { MessageCircleIcon } from "lucide-react";
 
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "아이디어 대시보드" },
-        { name: "description", content: "아이디어 대시보드" },
+        { title: "메시지" },
+        { name: "description", content: "메시지" },
     ];
 };
 
@@ -13,8 +14,9 @@ export const meta: MetaFunction = () => {
 
 export default function MessagesPage({ loaderData, actionData }: Route.ComponentProps) {
     return (
-        <div>
-            <h1>메시지</h1>
+        <div className="h-full flex flex-col items-center justify-center gap-4">
+            <MessageCircleIcon className="size-12 text-muted-foreground" />
+            <h1 className="text-2xl text-muted-foreground font-semibold">사이드바에서 메시지를 클릭하세요</h1>
         </div>
     );
 } 
