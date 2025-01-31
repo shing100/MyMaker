@@ -1,4 +1,3 @@
-import type { Route } from "./+types/submit-page";
 import { Hero } from "~/common/components/hero";
 import { Form } from "react-router";
 import InputPair from "~/common/components/input-pair";
@@ -7,6 +6,7 @@ import { Input } from "~/common/components/ui/input";
 import { Label } from "~/common/components/ui/label";
 import { useState } from "react";
 import { Button } from "~/common/components/ui/button";
+import type { Route } from "./+types/submit-product-page";
 
 
 export const meta: Route.MetaFunction = () => {
