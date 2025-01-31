@@ -1,5 +1,5 @@
+import type { Route } from "./+types/dashboard-page";
 import type { MetaFunction } from "react-router";
-import type { Route } from "./+types/profile-page";
 
 
 export const meta: MetaFunction = () => {
@@ -11,10 +11,10 @@ export const meta: MetaFunction = () => {
 
 
 
-export default function ProfilePage({ loaderData, actionData }: Route.ComponentProps) {
+export default function DashboardPage({ loaderData, actionData }: Route.ComponentProps) {
     return (
         <div>
-            <h1>사용자 프로필</h1>
+            <h1>대시보드</h1>
         </div>
     );
-}
+} 

@@ -1,5 +1,5 @@
 import type { MetaFunction } from "react-router";
-import type { Route } from "./+types/profile-page";
+import type { Route } from "./+types/notifications-page";
 
 
 export const meta: MetaFunction = () => {
@@ -11,10 +11,10 @@ export const meta: MetaFunction = () => {
 
 
 
-export default function ProfilePage({ loaderData, actionData }: Route.ComponentProps) {
+export default function NotificationsPage({ loaderData, actionData }: Route.ComponentProps) {
     return (
         <div>
-            <h1>사용자 프로필</h1>
+            <h1>알림</h1>
         </div>
     );
-}
+} 

@@ -54,7 +54,7 @@ export default function App() {
   return (
     <div className={pathname.startsWith("/auth/") ? "" : "px-20 py-28"}>
       {pathname.startsWith("/auth") ? null : <Navigation
-        isLoggedIn={false}
+        isLoggedIn={true}
         hasNotifications={false}
         hasMessages={false} />}
       <Outlet />
