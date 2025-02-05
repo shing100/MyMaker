@@ -19,10 +19,10 @@ export default function JobsPage() {
         setSearchParams(searchParams);
     }
     return (
-        <div className="space-y-20">
+        <div className="space-y-10 md:space-y-20">
             <Hero title="Jobs" subtitle="Companies looking for talents" />
-            <div className="grid grid-cols-6 gap-20 items-start">
-                <div className="grid grid-cols-3 col-span-4 gap-5">
+            <div className="grid grid-cols-1 xl:grid-cols-6 gap-20 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 xl:col-span-4 gap-5">
                     {Array.from({ length: 20 }).map((_, index) => (
                         <JobCard
                             key={index}
@@ -38,7 +38,7 @@ export default function JobsPage() {
                         />
                     ))}
                 </div>
-                <div className="col-span-2 space-y-4 sticky top-20">
+                <div className="xl:col-span-2 space-y-4 sticky top-20">
                     <div className="flex flex-col items-start gap-2.5">
                         <h4 className="text-sm text-muted-foreground font-bold">Type</h4>
                         <div className="flex flex-wrap gap-2">

@@ -3,8 +3,8 @@ import { BlurFade } from "~/common/components/ui/blur-fade";
 import { FlickeringGrid } from "~/common/components/ui/flickering-grid";
 
 export default function AuthLayout() {
-    return <div className="grid grid-cols-2 h-screen">
-        <div>
+    return <div className="grid grid-cols-1 lg:grid-cols-2 h-screen">
+        <div className="bg-gradient-to-br from-primary to-secondary hidden lg:block">
             <div className="flex flex-col gap-2 absolute top-20 left-20">
                 <BlurFade delay={0.25} inView>
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
