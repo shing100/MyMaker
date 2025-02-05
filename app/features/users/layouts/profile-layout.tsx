@@ -64,7 +64,6 @@ export default function ProfileLayout() {
                 {[
                     { lable: "About", to: "/users/username" },
                     { lable: "Products", to: "/users/username/products" },
-                    { lable: "Ideas", to: "/users/username/ideas" },
                     { lable: "Posts", to: "/users/username/posts" },
                 ].map((item) => (
                     <NavLink
