@@ -15,8 +15,8 @@ export default function DashboardIdeasPage({ loaderData, actionData }: Route.Com
     return (
         <div className="space-y-10 h-full">
             <h1 className="text-2xl font-semibold mb-6">아이디어 대시보드</h1>
-            <div className="grid grid-cols-4 gap-6">
-                {Array.from({ length: 5 }).map((_, index) => (
+            <div className="grid grid-cols-4 gap-6 overflow-y-scroll h-full">
+                {Array.from({ length: 20 }).map((_, index) => (
                     <IdeaCard
                         key={index}
                         id="ideaId"
