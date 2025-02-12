@@ -100,19 +100,19 @@ export default function SubmitJobPage() {
                         maxLength={1000}
                     />
                     <InputPair
-                        label="Company Website Url"
-                        description="채용 공고의 회사 웹사이트 URL을 입력해주세요."
-                        name="companyWebsiteUrl"
-                        placeholder="https://www.mymake.com"
+                        label="Company Location"
+                        description="채용 공고의 회사 위치를 입력해주세요."
+                        name="companyLocation"
+                        placeholder="Remote"
                         required
                         type="text"
                         maxLength={1000}
                     />
                     <InputPair
-                        label="Company Location"
-                        description="채용 공고의 회사 위치를 입력해주세요."
-                        name="companyLocation"
-                        placeholder="Remote"
+                        label="Company ApplyUrl"
+                        description="채용 공고의 회사 웹사이트 URL을 입력해주세요."
+                        name="ApplyUrl"
+                        placeholder="https://www.mymake.com"
                         required
                         type="text"
                         maxLength={1000}
