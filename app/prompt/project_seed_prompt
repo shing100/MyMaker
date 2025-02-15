@@ -1,0 +1,2 @@
+@migrations  Use this migration files to get the context you need to generate a seed.sql file to seed each table in the database fro 'profile_id' column use this value 'ee52c892-b276-4815-8e35-3158c701b789' , respect composite primary keys, unique values and so on. Create at least 5 rows per table if possible, 1 row per bridge table that contains a composite primary key.
+do net seed 'profiles' use 'ee52c892-b276-4815-8e35-3158c701b789' for 'profile_id' everywhrere
