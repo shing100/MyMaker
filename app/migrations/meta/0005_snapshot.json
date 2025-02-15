@@ -1,7 +1,7 @@
 {
-  "id": "6e490feb-9894-40c5-ac81-c28b4ee253b7",
+  "id": "d7437ef6-0c87-4635-9ef6-bef36f3a52e8",
   "prevId": "e0858ab8-7600-4e46-ae06-a4a960441c97",
-  "version": "5",
+  "version": "7",
   "dialect": "postgresql",
   "tables": {
     "public.post_replies": {
@@ -946,6 +946,100 @@
       },
       "isRLSEnabled": false
     },
+    "public.teams": {
+      "name": "teams",
+      "schema": "",
+      "columns": {
+        "team_id": {
+          "name": "team_id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "teams_team_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "product_name": {
+          "name": "product_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_size": {
+          "name": "team_size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "equity_split": {
+          "name": "equity_split",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "product_stage": {
+          "name": "product_stage",
+          "type": "product_stage",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "roles": {
+          "name": "roles",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "product_description": {
+          "name": "product_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "team_size_check": {
+          "name": "team_size_check",
+          "value": "\"teams\".\"team_size\" BETWEEN 1 AND 100"
+        },
+        "equity_split_check": {
+          "name": "equity_split_check",
+          "value": "\"teams\".\"equity_split\" BETWEEN 1 AND 100"
+        },
+        "product_description_check": {
+          "name": "product_description_check",
+          "value": "LENGTH(\"teams\".\"product_description\") <= 200"
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.follows": {
       "name": "follows",
       "schema": "",
@@ -1135,6 +1229,16 @@
         "$150,000 - $200,000",
         "$200,000 - $250,000",
         "$250,000+"
+      ]
+    },
+    "public.product_stage": {
+      "name": "product_stage",
+      "schema": "public",
+      "values": [
+        "idea",
+        "prototype",
+        "mvp",
+        "launched"
       ]
     },
     "public.role": {
