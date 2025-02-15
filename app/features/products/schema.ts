@@ -3,7 +3,7 @@ import { profiles } from "../users/schema";
 import { sql } from "drizzle-orm";
 
 
-export const poduects = pgTable("products", {
+export const products = pgTable("products", {
     product_id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
     name: text().notNull(),
     tagline: text().notNull(),
@@ -28,7 +28,7 @@ export const categories = pgTable("categories", {
 })
 
 export const product_upvotes = pgTable("product_upvotes", {
-    product_id: bigint({ mode: "number" }).references(() => poduects.product_id, { onDelete: "cascade" }),
+    product_id: bigint({ mode: "number" }).references(() => products.product_id, { onDelete: "cascade" }),
     profile_id: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }),
     created_at: timestamp().notNull().defaultNow(),
 }, (table) => [primaryKey({ columns: [table.product_id, table.profile_id] })])
@@ -36,7 +36,7 @@ export const product_upvotes = pgTable("product_upvotes", {
 
 export const reviews = pgTable("reviews", {
     review_id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
-    product_id: bigint({ mode: "number" }).references(() => poduects.product_id, { onDelete: "cascade" }),
+    product_id: bigint({ mode: "number" }).references(() => products.product_id, { onDelete: "cascade" }),
     profile_id: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }),
     rating: integer().notNull(),
     review: text().notNull(),
