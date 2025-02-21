@@ -4,14 +4,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "~/common/components/ui/avat
 import { Button } from "~/common/components/ui/button";
 import { ChevronUpIcon, DotIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { DateTime } from "luxon";
 
 interface PostCardProps {
-    id: string;
+    id: number;
     title: string;
     authorName: string;
-    authorAvatarUrl?: string;
+    authorAvatarUrl?: string | null;
     category: string;
-    createdAt: string;
+    createdAt: Date;
     expanded?: boolean;
     votesCount: number;
 }
@@ -35,13 +36,13 @@ export function PostCard({
                         <AvatarFallback>{authorName[0]}</AvatarFallback>
                         {authorAvatarUrl && <AvatarImage src={authorAvatarUrl} />}
                     </Avatar>
-                    <div className="space-y-0">
+                    <div className="space-y-2">
                         <CardTitle>{title}</CardTitle>
                         <div className="flex gap-2 text-sm leading-tight text-muted-foreground">
                             <span>{authorName} on</span>
                             <span>{category}</span>
                             <DotIcon className="w-4 h-4" />
-                            <span>{createdAt}</span>
+                            <span>{DateTime.fromJSDate(createdAt).toRelative()}</span>
                         </div>
                     </div>
                 </CardHeader>
