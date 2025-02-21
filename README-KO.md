@@ -38,3 +38,16 @@ ex) npx shadcn@latest add separator
 
 ### 이슈
 - [tailwindcss v4 버전 이슈](https://stackoverflow.com/questions/79383705/cannot-build-frontend-using-vite-tailwindcss-with-postcss)
+
+```shell
+## Access token not provided. Supply an access token by running supabase login or setting the SUPABASE_ACCESS_TOKEN environment variable.
+## database.types.ts 생성시 login 오류
+
+npx supabase login > enter > url > 코드 인증 후
+npx run db:typegen ✅
+```
+
+```
+npm install @supabase/supabase-js@2.47.5
+위 명령으로 다운그레이드하면 !inner가 제대로 동작
+```
