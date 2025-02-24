@@ -1,4 +1,4 @@
-import { Form, Link, useSearchParams, type MetaFunction } from "react-router"
+import { Await, Form, Link, useSearchParams, type MetaFunction } from "react-router"
 import type { Route } from "./+types/community-page"
 import { Hero } from "~/common/components/hero"
 import { Button } from "~/common/components/ui/button"
@@ -8,6 +8,9 @@ import { PERIOD_OPTIONS, SORT_OPTIONS } from "../constants"
 import { Input } from "~/common/components/ui/input"
 import { PostCard } from "../components/post-card"
 import { getPosts, getTopics } from "../queries"
+import { Suspense } from "react"
+import { PostCardSkeleton } from "../components/post-card-skeleton"
+import { TopicSkeleton } from "../components/topic-skeleton"
 
 
 export const meta: MetaFunction = () => {
@@ -18,13 +21,18 @@ export const meta: MetaFunction = () => {
 }
 
 export const loader = async () => {
-    const topics = await getTopics();
-    const posts = await getPosts();
+    // const topics = await getTopics();
+    // const posts = await getPosts();
+    // const [topics, posts] = await Promise.all([getTopics(), getPosts()]);
+
+    const topics = getTopics();
+    const posts = getPosts();
     return { topics, posts };
 }
 
 
 export default function CommunityPage({ loaderData }: Route.ComponentProps) {
+    const { topics, posts } = loaderData;
     const [searchParams, setSearchParams] = useSearchParams();
     const sorting = searchParams.get("sorting") || "newest";
     const period = searchParams.get("period") || "all-time";
@@ -92,31 +100,59 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                             <Link to="/community/submit">Create a discussion</Link>
                         </Button>
                     </div>
-                    <div className="space-y-5">
-                        {loaderData.posts.map((post) => (
-                            <PostCard
-                                key={post.post_id}
-                                id={post.post_id}
-                                title={post.title}
-                                authorName={post.author}
-                                authorAvatarUrl={post.author_avatar}
-                                category={post.topic}
-                                createdAt={post.created_at}
-                                expanded
-                                votesCount={post.upvotes}
-                            />
-                        ))}
-                    </div>
+                    <Suspense
+                        fallback={
+                            <div className="space-y-5">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <PostCardSkeleton key={i} />
+                                ))}
+                            </div>
+                        }
+                    >
+                        <Await resolve={posts}>
+                            {(data) => (
+                                <div className="space-y-5">
+                                    {data.map((post) => (
+                                        <PostCard
+                                            key={post.post_id}
+                                            id={post.post_id}
+                                            title={post.title}
+                                            authorName={post.author}
+                                            authorAvatarUrl={post.author_avatar}
+                                            category={post.topic}
+                                            createdAt={post.created_at}
+                                            expanded
+                                            votesCount={post.upvotes}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </Await>
+                    </Suspense>
                 </div>
                 <aside className="col-span-2 space-y-4 sticky top-20">
                     <span className="text-sm font-bold text-muted-foreground uppercase">Topics</span>
-                    <div className="flex flex-col gap-2 items-start">
-                        {loaderData.topics.map((topic) => (
-                            <Button variant="link" asChild key={topic.slug} className="pl-0">
-                                <Link to={`/community?topic=${topic.slug}`}>{topic.name}</Link>
-                            </Button>
-                        ))}
-                    </div>
+                    <Suspense
+                        fallback={
+                            <div className="flex flex-col gap-2">
+                                {Array.from({ length: 6 }).map((_, i) => (
+                                    <TopicSkeleton key={i} />
+                                ))}
+                            </div>
+                        }
+                    >
+                        <Await resolve={topics}>
+                            {(data) => (
+                                <div className="flex flex-col gap-2 items-start">
+                                    {data.map((topic) => (
+                                        <Button variant="link" asChild key={topic.slug} className="pl-0">
+                                            <Link to={`/community?topic=${topic.slug}`}>{topic.name}</Link>
+                                        </Button>
+                                    ))}
+                                </div>
+                            )}
+                        </Await>
+                    </Suspense>
                 </aside>
             </div>
         </div>
