@@ -122,4 +122,4 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
             </div>
         </div>
     )
-} 
+}
