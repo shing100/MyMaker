@@ -27,7 +27,7 @@ export default function HomePage() {
                     <h2 className="text-5xl font-bold leading-tight tracking-tight">Today's Products</h2>
                     <p className="text-xl font-light text-foreground">The best products made by our community today.</p>
                     <Button variant="link" asChild className="text-lg p-0">
-                        <Link to="/products/leaderboards">
+                        <Link to="/products/leaderboards" prefetch="intent">
                             Explore all products &rarr;
                         </Link>
                     </Button>
@@ -49,7 +49,7 @@ export default function HomePage() {
                     <h2 className="text-5xl font-bold leading-tight tracking-tight">Latest Discussions</h2>
                     <p className="text-xl font-light text-foreground">The latest discussions from our community.</p>
                     <Button variant="link" asChild className="text-lg p-0">
-                        <Link to="/community">
+                        <Link to="/community" prefetch="intent">
                             Explore all discussions &rarr;
                         </Link>
                     </Button>
@@ -57,7 +57,7 @@ export default function HomePage() {
                 {Array.from({ length: 11 }).map((_, index) => (
                     <PostCard
                         key={index}
-                        id="postId"
+                        id={index}
                         title="What is the best way to organize my workspace?"
                         authorName="Carrot"
                         authorAvatarUrl="https://github.com/apple.png"
@@ -72,7 +72,7 @@ export default function HomePage() {
                     <h2 className="text-5xl font-bold leading-tight tracking-tight">IdeasGPT</h2>
                     <p className="text-xl font-light text-foreground">Find ideas for your next project.</p>
                     <Button variant="link" asChild className="text-lg p-0">
-                        <Link to="/ideas">
+                        <Link to="/ideas" prefetch="intent">
                             Explore all ideas &rarr;
                         </Link>
                     </Button>
@@ -94,7 +94,7 @@ export default function HomePage() {
                     <h2 className="text-5xl font-bold leading-tight tracking-tight">Latest Jobs</h2>
                     <p className="text-xl font-light text-foreground">Find your dream job.</p>
                     <Button variant="link" asChild className="text-lg p-0">
-                        <Link to="/jobs">
+                        <Link to="/jobs" prefetch="intent">
                             Explore all jobs &rarr;
                         </Link>
                     </Button>
@@ -119,7 +119,7 @@ export default function HomePage() {
                     <h2 className="text-5xl font-bold leading-tight tracking-tight">Find a team mate</h2>
                     <p className="text-xl font-light text-foreground">Join a team looking for a new member.</p>
                     <Button variant="link" asChild className="text-lg p-0">
-                        <Link to="/jobs">
+                        <Link to="/teams" prefetch="intent">
                             Explore all teams &rarr;
                         </Link>
                     </Button>

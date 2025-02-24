@@ -140,7 +140,7 @@ export default function Navigation({
                             <NavigationMenuItem key={menu.name}>
                                 {menu.items ? (
                                     <>
-                                        <Link to={menu.to}>
+                                        <Link to={menu.to} prefetch="intent">
                                             <NavigationMenuTrigger>{menu.name}</NavigationMenuTrigger>
                                         </Link>
                                         <NavigationMenuContent>
@@ -177,7 +177,7 @@ export default function Navigation({
             {isLoggedIn ?
                 <div className="flex items-center gap-4">
                     <Button size="icon" variant="ghost" asChild className="relative">
-                        <Link to="/my/notifications">
+                        <Link to="/my/notifications" >
                             <BellIcon className="size-4" />
                             {hasNotifications && <div className="absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full" />}
                         </Link>
