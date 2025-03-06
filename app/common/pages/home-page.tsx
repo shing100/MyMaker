@@ -6,6 +6,8 @@ import { IdeaCard } from "~/features/ideas/components/idea-card";
 import { JobCard } from "~/features/jobs/components/job-card";
 import { TeamCard } from "~/features/teams/components/team-card";
 import type { Route } from "./+types/home-page";
+import { DateTime } from "luxon";
+import { getProductsByDateRange } from "~/features/products/queries";
 
 export const meta: Route.MetaFunction = () => {
     return [
@@ -19,7 +21,16 @@ export const meta: Route.MetaFunction = () => {
     ];
 };
 
-export default function HomePage() {
+export const loader = async () => {
+    const products = await getProductsByDateRange({
+        startDate: DateTime.now().startOf("day"),
+        endDate: DateTime.now().endOf("day"),
+        limit: 7,
+    });
+    return { products }
+};
+
+export default function HomePage({ loaderData }: Route.ComponentProps) {
     return (
         <div className="px-20 space-y-40">
             <div className="grid grid-cols-3 gap-4">
@@ -32,15 +43,15 @@ export default function HomePage() {
                         </Link>
                     </Button>
                 </div>
-                {Array.from({ length: 11 }).map((_, index) => (
+                {loaderData.products.map((product, index) => (
                     <ProductCard
-                        key={index}
-                        id="productId"
-                        name="Product Name"
-                        description="Product Description"
-                        upvotes={200}
-                        comments={12}
-                        views={12}
+                        key={product.product_id}
+                        id={product.product_id.toString()}
+                        name={product.name}
+                        description={product.description}
+                        upvotes={product.upvotes}
+                        reviews={product.reviews}
+                        views={product.views}
                     />
                 ))}
             </div>
