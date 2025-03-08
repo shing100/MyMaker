@@ -8,6 +8,8 @@ import { TeamCard } from "~/features/teams/components/team-card";
 import type { Route } from "./+types/home-page";
 import { DateTime } from "luxon";
 import { getProductsByDateRange } from "~/features/products/queries";
+import { getPosts } from "~/features/community/queries";
+import { getGptIdeas } from "~/features/ideas/queries";
 
 export const meta: Route.MetaFunction = () => {
     return [
@@ -27,7 +29,14 @@ export const loader = async () => {
         endDate: DateTime.now().endOf("day"),
         limit: 7,
     });
-    return { products }
+    const posts = await getPosts({
+        limit: 7,
+        sorting: "newest",
+    });
+    const ideas = await getGptIdeas({
+        limit: 7
+    })
+    return { products, posts, ideas }
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -65,16 +74,16 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
                         </Link>
                     </Button>
                 </div>
-                {Array.from({ length: 11 }).map((_, index) => (
+                {loaderData.posts.map((post) => (
                     <PostCard
-                        key={index}
-                        id={index}
-                        title="What is the best way to organize my workspace?"
-                        authorName="Carrot"
-                        authorAvatarUrl="https://github.com/apple.png"
-                        category="Productivity"
-                        createdAt="12 hours ago"
-                        votesCount={12}
+                        key={post.post_id}
+                        id={post.post_id}
+                        title={post.title}
+                        authorName={post.author}
+                        authorAvatarUrl={post.author_avatar}
+                        category={post.topic}
+                        createdAt={post.created_at}
+                        votesCount={post.upvotes}
                     />
                 ))}
             </div>
@@ -88,15 +97,15 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
                         </Link>
                     </Button>
                 </div>
-                {Array.from({ length: 5 }).map((_, index) => (
+                {loaderData.ideas.map((idea) => (
                     <IdeaCard
-                        key={index}
-                        id="ideaId"
-                        title="A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progesss using a mobile app to track workouts and progress as well as a website to track progress and see your stats."
-                        views={123}
-                        likes={123}
-                        createdAt="12 hours ago"
-                        claimed={index % 2 === 0}
+                        key={idea.gpt_idea_id}
+                        id={idea.gpt_idea_id}
+                        title={idea.idea}
+                        views={idea.views}
+                        likes={idea.likes}
+                        createdAt={idea.created_at}
+                        claimed={idea.is_claimed}
                     />
                 ))}
             </div>

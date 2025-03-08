@@ -99,9 +99,9 @@ export default function WeeklyLeaderboardsPage({ loaderData }: Route.ComponentPr
                         id="productId"
                         name="Product Name"
                         description="Product Description"
-                        upvotes={200}
-                        comments={12}
-                        views={12}
+                        upvotes="200"
+                        reviews="12"
+                        views="12"
                     />
                 ))}
                 <ProductPagination totalPages={10} />

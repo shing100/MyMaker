@@ -14,7 +14,7 @@ INNER JOIN topics USING (topic_id)
 INNER JOIN profiles USING (profile_id);
 
 
--- after post upvote trigger 
+-- after post upvote trigger
 
 -- CREATE OR REPLACE VIEW community_post_list_view AS 
 -- SELECT

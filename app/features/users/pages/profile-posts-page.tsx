@@ -16,7 +16,7 @@ export default function ProfilePostsPage() {
             {Array.from({ length: 5 }).map((_, index) => (
                 <PostCard
                     key={index}
-                    id="postId"
+                    id={index}
                     title="What is the best way to organize my workspace?"
                     authorName="Carrot"
                     authorAvatarUrl="https://github.com/shadcn.png"

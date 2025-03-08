@@ -1,9 +1,8 @@
 import { bigint, integer, pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { profiles } from "../users/schema";
-import { create } from "domain";
 
 
-export const gptIdeas = pgTable("get_ideas", {
+export const gptIdeas = pgTable("gpt_ideas", {
     gpt_idea_id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
     idea: text().notNull(),
     views: integer().notNull().default(0),

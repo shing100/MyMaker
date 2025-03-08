@@ -63,9 +63,9 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
                         id="productId"
                         name="Product Name"
                         description="Product Description"
-                        upvotes={200}
-                        comments={12}
-                        views={12}
+                        upvotes="200"
+                        reviews="12"
+                        views="12"
                     />
                 ))}
                 <ProductPagination totalPages={10} />

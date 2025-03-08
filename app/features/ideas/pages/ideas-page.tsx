@@ -1,7 +1,8 @@
 import { Hero } from "~/common/components/hero";
-import type { MetaFunction, Route } from "./+types/ideas-page";
-import type { ComponentProps } from "react";
 import { IdeaCard } from "../components/idea-card";
+import { getGptIdeas } from "../queries";
+import type { Route } from "./+types/ideas-page";
+import type { MetaFunction } from "react-router";
 
 export const meta: MetaFunction = () => {
     return [
@@ -10,22 +11,25 @@ export const meta: MetaFunction = () => {
     ];
 }
 
+export const loader = async () => {
+    const ideas = await getGptIdeas({ limit: 20 });
+    return { ideas };
+};
 
-
-export default function IdeasPage() {
+export default function IdeasPage({ loaderData }: Route.ComponentProps) {
     return (
         <div className="space-y-20">
             <Hero title="IdeasGPT" subtitle="IdeasGPT is a tool that helps you generate ideas for your business." />
             <div className="grid grid-cols-4 gap-4">
-                {Array.from({ length: 12 }).map((_, index) => (
+                {loaderData.ideas.map((idea) => (
                     <IdeaCard
-                        key={index}
-                        id="ideaId"
-                        title="A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progesss using a mobile app to track workouts and progress as well as a website to track progress and see your stats."
-                        views={123}
-                        likes={123}
-                        createdAt="12 hours ago"
-                        claimed={index % 2 === 0}
+                        key={idea.gpt_idea_id}
+                        id={idea.gpt_idea_id}
+                        title={idea.idea}
+                        views={idea.views}
+                        likes={idea.likes}
+                        createdAt={idea.created_at}
+                        claimed={idea.is_claimed}
                     />
                 ))}
             </div>

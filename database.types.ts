@@ -66,7 +66,7 @@ export type Database = {
           },
         ]
       }
-      get_ideas: {
+      gpt_ideas: {
         Row: {
           claimed_at: string | null
           claimed_by: string | null
@@ -93,7 +93,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "get_ideas_claimed_by_profiles_profile_id_fk"
+            foreignKeyName: "gpt_ideas_claimed_by_profiles_profile_id_fk"
             columns: ["claimed_by"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -119,10 +119,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "gpt_ideas_likes_gpt_idea_id_get_ideas_gpt_idea_id_fk"
+            foreignKeyName: "gpt_ideas_likes_gpt_idea_id_gpt_ideas_gpt_idea_id_fk"
             columns: ["gpt_idea_id"]
             isOneToOne: false
-            referencedRelation: "get_ideas"
+            referencedRelation: "gpt_ideas"
+            referencedColumns: ["gpt_idea_id"]
+          },
+          {
+            foreignKeyName: "gpt_ideas_likes_gpt_idea_id_gpt_ideas_gpt_idea_id_fk"
+            columns: ["gpt_idea_id"]
+            isOneToOne: false
+            referencedRelation: "gpt_ideas_view"
             referencedColumns: ["gpt_idea_id"]
           },
           {
@@ -461,6 +468,7 @@ export type Database = {
           title: string
           topic_id: number | null
           updated_at: string
+          upvotes: number | null
         }
         Insert: {
           content: string
@@ -470,6 +478,7 @@ export type Database = {
           title: string
           topic_id?: number | null
           updated_at?: string
+          upvotes?: number | null
         }
         Update: {
           content?: string
@@ -479,6 +488,7 @@ export type Database = {
           title?: string
           topic_id?: number | null
           updated_at?: string
+          upvotes?: number | null
         }
         Relationships: [
           {
@@ -745,7 +755,19 @@ export type Database = {
           post_id: number | null
           title: string | null
           topic: string | null
+          topic_slug: string | null
           upvotes: number | null
+        }
+        Relationships: []
+      }
+      gpt_ideas_view: {
+        Row: {
+          created_at: string | null
+          gpt_idea_id: number | null
+          idea: string | null
+          is_claimed: boolean | null
+          likes: number | null
+          views: number | null
         }
         Relationships: []
       }
