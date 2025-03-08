@@ -1,4 +1,4 @@
-import { Form, Link, useSearchParams, type MetaFunction } from "react-router"
+import { data, Form, Link, useSearchParams, type MetaFunction } from "react-router"
 import type { Route } from "./+types/community-page"
 import { Hero } from "~/common/components/hero"
 import { Button } from "~/common/components/ui/button"
@@ -8,6 +8,7 @@ import { PERIOD_OPTIONS, SORT_OPTIONS } from "../constants"
 import { Input } from "~/common/components/ui/input"
 import { PostCard } from "../components/post-card"
 import { getPosts, getTopics } from "../queries"
+import { z } from "zod"
 
 
 export const meta: MetaFunction = () => {
@@ -17,13 +18,43 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader = async () => {
-    // const topics = await getTopics();
-    // const posts = await getPosts();
-    const [topics, posts] = await Promise.all([getTopics(), getPosts()]);
-    return { topics, posts };
-}
+const searchParamsSchema = z.object({
+    sorting: z.enum(["newest", "popular"]).optional().default("newest"),
+    period: z
+        .enum(["all", "today", "week", "month", "year"])
+        .optional()
+        .default("all"),
+    keyword: z.string().optional(),
+    topic: z.string().optional(),
+});
 
+export const loader = async ({ request }: Route.LoaderArgs) => {
+    const url = new URL(request.url);
+    const { success, data: parsedData } = searchParamsSchema.safeParse(
+        Object.fromEntries(url.searchParams)
+    );
+    if (!success) {
+        throw data(
+            {
+                error_code: "invalid_search_params",
+                message: "Invalid search params",
+            },
+            { status: 400 }
+        );
+    }
+
+    const [topics, posts] = await Promise.all([
+        getTopics(),
+        getPosts({
+            limit: 20,
+            sorting: parsedData.sorting,
+            period: parsedData.period,
+            keyword: parsedData.keyword,
+            topic: parsedData.topic,
+        }),
+    ]);
+    return { topics, posts };
+};
 
 export default function CommunityPage({ loaderData }: Route.ComponentProps) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -86,7 +117,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                                 )}
                             </div>
                             <Form className="w-2/3">
-                                <Input type="text" placeholder="Search for a discussion" name="search" />
+                                <Input type="text" placeholder="Search for a discussion" name="keyword" />
                             </Form>
                         </div>
                         <Button asChild>
