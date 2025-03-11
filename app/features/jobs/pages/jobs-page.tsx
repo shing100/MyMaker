@@ -1,9 +1,13 @@
-import { Link, useSearchParams, type MetaFunction } from "react-router";
+import { data, Link, useSearchParams, type MetaFunction } from "react-router";
 import { Hero } from "~/common/components/hero";
 import { JobCard } from "../components/job-card";
 import { Button } from "~/common/components/ui/button";
-import { JOB_TYPES, LOCATION_TYPES, SALARY_TYPES } from "../constants";
+import { JOB_TYPES, LOCATION_TYPES, SALARY_TYPES as SALARY_RANGE } from "../constants";
 import { cn } from "~/lib/utils";
+import { getJobs } from "../queries";
+import type { Route } from "./+types/jobs-page";
+import { z } from "zod";
+import { URL } from "url";
 
 export const meta: MetaFunction = () => {
     return [
@@ -12,10 +16,31 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export default function JobsPage() {
+const searchParamsSchema = z.object({
+    type: z.enum(JOB_TYPES.map((type) => type.value) as [string, ...string[]]).optional(),
+    location: z.enum(LOCATION_TYPES.map((type) => type.value) as [string, ...string[]]).optional(),
+    salary: z.enum(SALARY_RANGE).optional(),
+});
+
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+    const url = new URL(request.url);
+    const { success, data: parsedData } = searchParamsSchema.safeParse(Object.fromEntries(url.searchParams));
+    if (!success) {
+        throw data({ error_code: "INVALID_SEARCH_PARAMS", error_message: "Invalid search params" }, { status: 400 });
+    }
+    const jobs = await getJobs({ limit: 40, location: parsedData.location, type: parsedData.type, salary: parsedData.salary });
+    return { jobs };
+}
+
+export default function JobsPage({ loaderData }: Route.ComponentProps) {
     const [searchParams, setSearchParams] = useSearchParams();
     const onFilterClick = (key: string, value: string) => {
-        searchParams.set(key, value);
+        if (searchParams.get(key) === value) {
+            searchParams.delete(key);
+        } else {
+            searchParams.set(key, value);
+        }
         setSearchParams(searchParams);
     }
     return (
@@ -23,18 +48,18 @@ export default function JobsPage() {
             <Hero title="Jobs" subtitle="Companies looking for talents" />
             <div className="grid grid-cols-1 xl:grid-cols-6 gap-20 items-start">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 xl:col-span-4 gap-5">
-                    {Array.from({ length: 20 }).map((_, index) => (
+                    {loaderData.jobs.map((job) => (
                         <JobCard
-                            key={index}
-                            id="jobId"
-                            title="Software Engineer"
-                            companyName="Meta"
-                            companyLogoUrl="https://github.com/facebook.png"
-                            companyHq="San Francisco, CA"
-                            createdAt="12 hours ago"
-                            type="Full-time"
-                            salary="$100,000 - $120,000"
-                            positionLocation="Remote"
+                            key={job.job_id}
+                            id={job.job_id}
+                            title={job.position}
+                            companyName={job.company_name}
+                            companyLogoUrl={job.company_logo}
+                            companyHq={job.company_location}
+                            createdAt={job.created_at}
+                            type={job.job_type}
+                            salary={job.salary}
+                            positionLocation={job.location}
                         />
                     ))}
                 </div>
@@ -74,7 +99,7 @@ export default function JobsPage() {
                     <div className="flex flex-col items-start gap-2.5">
                         <h4 className="text-sm text-muted-foreground font-bold">Salary Range</h4>
                         <div className="flex flex-wrap gap-2">
-                            {SALARY_TYPES.map((salary) => (
+                            {SALARY_RANGE.map((salary) => (
                                 <Button
                                     variant="outline"
                                     onClick={() => onFilterClick("salary", salary)}

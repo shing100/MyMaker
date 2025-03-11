@@ -10,6 +10,7 @@ import { DateTime } from "luxon";
 import { getProductsByDateRange } from "~/features/products/queries";
 import { getPosts } from "~/features/community/queries";
 import { getGptIdeas } from "~/features/ideas/queries";
+import { getJobs } from "~/features/jobs/queries";
 
 export const meta: Route.MetaFunction = () => {
     return [
@@ -36,7 +37,11 @@ export const loader = async () => {
     const ideas = await getGptIdeas({
         limit: 7
     })
-    return { products, posts, ideas }
+
+    const jobs = await getJobs({
+        limit: 11
+    })
+    return { products, posts, ideas, jobs };
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -119,18 +124,18 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
                         </Link>
                     </Button>
                 </div>
-                {Array.from({ length: 11 }).map((_, index) => (
+                {loaderData.jobs.map((job) => (
                     <JobCard
-                        key={index}
-                        id="jobId"
-                        title="Software Engineer"
-                        companyName="Meta"
-                        companyLogoUrl="https://github.com/facebook.png"
-                        companyHq="San Francisco, CA"
-                        createdAt="12 hours ago"
-                        type="Full-time"
-                        salary="$100,000 - $120,000"
-                        positionLocation="Remote"
+                        key={job.job_id}
+                        id={job.job_id}
+                        title={job.position}
+                        companyName={job.company_name}
+                        companyLogoUrl={job.company_logo}
+                        companyHq={job.company_location}
+                        createdAt={job.created_at}
+                        type={job.job_type}
+                        salary={job.salary}
+                        positionLocation={job.location}
                     />
                 ))}
             </div>
