@@ -15,7 +15,6 @@ export const getJobs = async ({ limit, location, type, salary }: { limit: number
             salary,
             created_at
         `)
-        .limit(limit)
         .order('created_at', { ascending: false })
     if (location) {
         baseQuery.eq("location", location);
@@ -26,6 +25,9 @@ export const getJobs = async ({ limit, location, type, salary }: { limit: number
     if (salary) {
         baseQuery.eq("salary", salary);
     }
+
+    baseQuery.limit(limit);
+
     const { data, error } = await baseQuery;
     if (error) {
         throw error;

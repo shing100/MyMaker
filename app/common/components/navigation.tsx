@@ -45,29 +45,29 @@ const menus = [
         items: [
             {
                 name: "Remote Jobs",
-                description: "Find remote jobs in our community",
-                to: "/jobs?location=remote"
+                description: "Find a remote job in our community",
+                to: "/jobs?location=remote",
             },
             {
                 name: "Full-Time Jobs",
-                description: "Find full-time jobs in our community",
-                to: "/jobs?location=full-time"
+                description: "Find a full-time job in our community",
+                to: "/jobs?type=full-time",
             },
             {
                 name: "Freelance Jobs",
-                description: "Find freelance jobs in our community",
-                to: "/jobs?location=freelance"
+                description: "Find a freelance job in our community",
+                to: "/jobs?type=freelance",
             },
             {
                 name: "Internships",
-                description: "Find internships in our community",
-                to: "/jobs?location=internship"
+                description: "Find an internship in our community",
+                to: "/jobs?type=internship",
             },
             {
-                name: "Submit a Job",
-                description: "Submit a job to be featured on our platform",
-                to: "/jobs/submit"
-            }
+                name: "Post a Job",
+                description: "Post a job to our community",
+                to: "/jobs/submit",
+            },
         ]
     },
     {

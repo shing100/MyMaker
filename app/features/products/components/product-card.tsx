@@ -4,7 +4,7 @@ import { Button } from "~/common/components/ui/button";
 import { ChevronUpIcon, EyeIcon, MessageCircleIcon } from "lucide-react";
 
 interface ProductCardProps {
-    id: string;
+    id: number | string;
     name: string;
     description: string;
     upvotes: string;
