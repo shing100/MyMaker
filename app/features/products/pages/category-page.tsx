@@ -26,9 +26,11 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
     if (!success) {
         throw new Response("Invalid category", { status: 400 });
     }
-    const category = await getCategory(data.category);
-    const products = await getProductsByCategory({ categoryId: data.category, page: Number(page) });
-    const totalPages = await getCategoryPages(data.category);
+    const [category, products, totalPages] = await Promise.all([
+        getCategory(data.category),
+        getProductsByCategory({ categoryId: data.category, page: Number(page) }),
+        getCategoryPages(data.category)
+    ]);
     return { category, products, totalPages };
 }
 
@@ -45,7 +47,7 @@ export default function CategoryPage({ loaderData }: Route.ComponentProps) {
                         key={product.product_id}
                         id={product.product_id}
                         name={product.name}
-                        description={product.description}
+                        description={product.tagline}
                         upvotes={product.upvotes}
                         reviews={product.reviews}
                         views={product.views}

@@ -7,61 +7,79 @@ import { ProductCard } from "../components/product-card";
 import { Button } from "~/common/components/ui/button";
 import { HyperText } from "~/common/components/ui/hyper-text";
 import ProductPagination from "~/common/components/product-pagination";
+import { getProductPagesByDateRange, getProductsByDateRange } from "../queries";
 
 const paramsSchema = z.object({
-    year: z.string().regex(/^\d{4}$/).transform(Number),
+    year: z.coerce.number(),
 });
 
 export const meta: Route.MetaFunction = ({ params }) => {
     const date = DateTime.fromObject({
-        year: Number(params.year)
-    }).setZone("Asia/Seoul")
+        year: Number(params.year),
+    })
+        .setZone("Asia/Seoul")
         .setLocale("ko");
     return [
         {
-            title: `${date.toLocaleString({
-                year: "2-digit"
-            })} Leaderboards | MyMake`
+            title: `Best of ${date.toLocaleString({
+                year: "numeric",
+            })} | wemake`,
         },
-        { name: "description", content: "Best products of the month" }
     ];
 };
 
-export const loader = ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
     const { success, data: parsedData } = paramsSchema.safeParse(params);
     if (!success) {
-        throw data({
-            error_code: "INVALID_PARAMS",
-            error_message: "Invalid params"
-        }, {
-            status: 500
-        })
+        throw data(
+            {
+                error_code: "invalid_params",
+                message: "Invalid params",
+            },
+            { status: 400 }
+        );
     }
     const date = DateTime.fromObject({
-        year: parsedData.year
-    });
-
+        year: parsedData.year,
+    }).setZone("Asia/Seoul");
     if (!date.isValid) {
-        throw data({
-            error_code: "INVALID_DATE",
-            error_message: "Invalid date"
-        }, {
-            status: 500
-        })
+        throw data(
+            {
+                error_code: "invalid_date",
+                message: "Invalid date",
+            },
+            {
+                status: 400,
+            }
+        );
     }
-    const today = DateTime.now().startOf("day");
+    const today = DateTime.now().setZone("Asia/Seoul").startOf("year");
     if (date > today) {
-        throw data({
-            error_code: "FUTURE_DATE",
-            error_message: "Future date"
-        }, {
-            status: 500
-        })
+        throw data(
+            {
+                error_code: "future_date",
+                message: "Future date",
+            },
+            { status: 400 }
+        );
     }
+    const url = new URL(request.url);
+    const products = await getProductsByDateRange({
+        startDate: date.startOf("year"),
+        endDate: date.endOf("year"),
+        limit: 15,
+        page: Number(url.searchParams.get("page") || 1),
+    });
+    const totalPages = await getProductPagesByDateRange({
+        startDate: date.startOf("year"),
+        endDate: date.endOf("year"),
+    });
     return {
-        ...parsedData
+        products,
+        totalPages,
+        ...parsedData,
     };
-}
+};
 
 export default function YearlyLeaderboardsPage({ loaderData }: Route.ComponentProps) {
     const urlDate = DateTime.fromObject({
@@ -99,18 +117,18 @@ export default function YearlyLeaderboardsPage({ loaderData }: Route.ComponentPr
                 </Button> : null}
             </div>
             <div className="space-y-5 w-full max-w-screen-md mx-auto">
-                {Array.from({ length: 11 }).map((_, index) => (
+                {loaderData.products.map((product) => (
                     <ProductCard
-                        key={index}
-                        id="productId"
-                        name="Product Name"
-                        description="Product Description"
-                        upvotes="200"
-                        reviews="12"
-                        views="12"
+                        key={product.product_id}
+                        id={product.product_id.toString()}
+                        name={product.name}
+                        description={product.tagline}
+                        reviews={product.reviews}
+                        views={product.views}
+                        upvotes={product.upvotes}
                     />
                 ))}
-                <ProductPagination totalPages={10} />
+                <ProductPagination totalPages={loaderData.totalPages} />
             </div>
         </div >
     );
