@@ -1,6 +1,8 @@
 import type { MetaFunction } from "react-router";
 import { Hero } from "~/common/components/hero";
 import { TeamCard } from "../components/team-card";
+import { getTeams } from "../queries";
+import type { Route } from "./+types/teams-page";
 
 
 export const meta: MetaFunction = () => {
@@ -10,7 +12,12 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export default function TeamsPage() {
+export const loader = async () => {
+    const teams = await getTeams({ limit: 12 });
+    return { teams };
+}
+
+export default function TeamsPage({ loaderData }: Route.ComponentProps) {
     return (
         <div className="space-y-20">
             <Hero
@@ -18,14 +25,14 @@ export default function TeamsPage() {
                 subtitle="Find teams to join or create your own."
             />
             <div className="grid grid-cols-4 gap-4">
-                {Array.from({ length: 12 }).map((_, i) => (
+                {loaderData.teams.map((team) => (
                     <TeamCard
-                        key={i}
-                        id="teamId"
-                        leaderUsername="carrot"
-                        leaderAvatarUrl="https://github.com/shing100.png"
-                        positions={["React Developer", "Backend Developer", "Product Manager"]}
-                        projectDescription="a new social media platform"
+                        key={team.team_id}
+                        id={team.team_id}
+                        leaderUsername={team.team_leader.username}
+                        leaderAvatarUrl={team.team_leader.avatar}
+                        positions={team.roles.split(",")}
+                        projectDescription={team.product_description}
                     />
                 ))}
             </div>
