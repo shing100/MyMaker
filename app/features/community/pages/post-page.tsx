@@ -7,7 +7,7 @@ import { Textarea } from "~/common/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "~/common/components/ui/avatar"
 import { Badge } from "~/common/components/ui/badge"
 import { Reply } from "~/features/community/components/reply"
-import { getPostById } from "../queries";
+import { getPostById, getReplies } from "../queries";
 import { DateTime } from "luxon";
 
 export const meta: MetaFunction = () => {
@@ -20,7 +20,8 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
     const post = await getPostById(params.postId);
-    return { post };
+    const replies = await getReplies(params.postId);
+    return { post, replies };
 };
 
 
@@ -57,7 +58,7 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                             <ChevronUpIcon className="size-4 shrink-0" />
                             <span>{loaderData.post.upvotes}</span>
                         </Button>
-                        <div className="space-y-20">
+                        <div className="space-y-20 w-full">
                             <div className="space-y-2">
                                 <h2 className="text-3xl font-bold">{loaderData.post.title}</h2>
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -88,13 +89,16 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                                     {loaderData.post.replies} Replies
                                 </h4>
                                 <div className="flex flex-col gap-5">
-                                    <Reply
-                                        avatarSrc="https://github.com/facebook.png"
-                                        username="Carrot"
-                                        timestamp="12 hours ago"
-                                        content="제가 사용한 프로젝트 관리 툴은 노션이에요. 노션은 좋은 툴이지만 더 좋은 툴이 있을 것 같아요. 예를 들어서 플로우 같은 툴이 있어요. 플로우는 노션보다 더 좋은 툴이라고 생각해요."
-                                        topLevel
-                                    />
+                                    {loaderData.replies.map((reply) => (
+                                        <Reply
+                                            username={reply.user.name}
+                                            avatarUrl={reply.user.avatar}
+                                            content={reply.reply}
+                                            timestamp={reply.created_at}
+                                            topLevel={true}
+                                            replies={reply.post_replies}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         </div>
