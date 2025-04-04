@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/common/components/ui/avat
 import { Badge } from "~/common/components/ui/badge";
 import { Button } from "~/common/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/common/components/ui/card";
+import { getTeamById } from "../queries";
+import type { Route } from "./+types/team-page";
 
 export const meta: MetaFunction = () => {
     return [
@@ -13,34 +15,41 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export default function TeamPage() {
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
+    const team = await getTeamById(params.teamId);
+    return { team };
+};
+
+
+export default function TeamPage({ loaderData }: Route.ComponentProps) {
     return (
         <div className="space-y-20">
-            <Hero title="Join @Carrot's Team" />
+            <Hero title={`Join ${loaderData.team.team_leader.name}'s team`} />
             <div className="grid grid-cols-6 gap-40 items-start">
                 <div className="col-span-4 grid grid-cols-4 gap-5">
                     {[
                         {
                             title: "Product Name",
-                            value: "Doggie Social"
+                            value: loaderData.team.product_name,
                         },
                         {
                             title: "Stage",
-                            value: "MVP"
+                            value: loaderData.team.product_stage
                         },
                         {
                             title: "Team size",
-                            value: 10
+                            value: loaderData.team.team_size,
                         },
                         {
                             title: "Available equity",
-                            value: 50
+                            value: loaderData.team.equity_split,
                         },
                     ].map(item =>
                         <Card>
                             <CardHeader>
                                 <CardTitle className="text-sm font-medium text-muted-foreground">{item.title}</CardTitle>
-                                <CardContent className="p-0 font-bold text-2xl">
+                                <CardContent className="p-0 capitalize font-bold text-2xl">
                                     <p>{item.value}</p>
                                 </CardContent>
                             </CardHeader>
@@ -51,14 +60,9 @@ export default function TeamPage() {
                             <CardTitle className="text-sm font-medium text-muted-foreground">Looking for</CardTitle>
                             <CardContent className="p-0 font-bold text-2xl">
                                 <ul className="text-lg list-disc list-inside">
-                                    {[
-                                        "Product Manager",
-                                        "Product Designer",
-                                        "Product Engineer",
-                                        "Product Analyst"
-                                    ].map(item =>
+                                    {loaderData.team.roles.split(",").map((item) => (
                                         <li key={item}>{item}</li>
-                                    )}
+                                    ))}
                                 </ul>
                             </CardContent>
                         </CardHeader>
@@ -67,9 +71,7 @@ export default function TeamPage() {
                         <CardHeader>
                             <CardTitle className="text-sm font-medium text-muted-foreground">Idea description</CardTitle>
                             <CardContent className="p-0 font-medium text-xl">
-                                <p>
-                                    We are a team of 10 people who are building a social media platform for dogs.
-                                </p>
+                                <p>{loaderData.team.product_description}</p>
                             </CardContent>
                         </CardHeader>
                     </Card>
@@ -77,12 +79,20 @@ export default function TeamPage() {
                 <aside className="col-span-2 space-y-5 border rounded-lg p-6 shadow-sm">
                     <div className="flex gap-5">
                         <Avatar className="size-14">
-                            <AvatarImage src="https://github.com/apple.png" />
-                            <AvatarFallback>N</AvatarFallback>
+                            <AvatarFallback>
+                                {loaderData.team.team_leader.name[0]}
+                            </AvatarFallback>
+                            {loaderData.team.team_leader.avatar ? (
+                                <AvatarImage src={loaderData.team.team_leader.avatar} />
+                            ) : null}
                         </Avatar>
                         <div className="flex flex-col">
-                            <h4 className="text-lg font-bold">Carrot</h4>
-                            <Badge variant="outline">Entrepreneur</Badge>
+                            <h4 className="text-lg font-medium">
+                                {loaderData.team.team_leader.name}
+                            </h4>
+                            <Badge variant="secondary" className="capitalize">
+                                {loaderData.team.team_leader.role}
+                            </Badge>
                         </div>
                     </div>
                     <div className="gap-2 text-sm flex flex-col">
@@ -97,16 +107,6 @@ export default function TeamPage() {
                             type="text"
                             id="introduction"
                             placeholder="I'm a product manager with 5 years of experience in the industry. I'm looking for a team to join and help build a social media platform for dogs."
-                            required
-                            textArea
-                        />
-                        <InputPair
-                            label="Why do you want to join @Carrot's team?"
-                            name="why"
-                            description="Tell us why you want to join @Carrot's team"
-                            type="text"
-                            id="why"
-                            placeholder="I want to join @Carrot's team because I want to learn more about product management and design."
                             required
                             textArea
                         />
