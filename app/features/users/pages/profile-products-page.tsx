@@ -1,6 +1,7 @@
 import type { MetaFunction } from "react-router";
 import { ProductCard } from "~/features/products/components/product-card";
-
+import { getUserProducts } from "../queries";
+import type { Route } from "./+types/profile-products-page";
 
 export const meta: MetaFunction = () => {
     return [
@@ -9,19 +10,23 @@ export const meta: MetaFunction = () => {
     ];
 };
 
+export const loader = async ({ params }: Route.LoaderArgs) => {
+    const products = await getUserProducts(params.username);
+    return { products };
+};
 
-export default function ProfileProductsPage() {
+export default function ProfileProductsPage({ loaderData, }: Route.ComponentProps) {
     return (
         <div className="flex flex-col gap-5">
-            {Array.from({ length: 5 }).map((_, index) => (
+            {loaderData.products.map((product) => (
                 <ProductCard
-                    key={index}
-                    id="productId"
-                    name="Product Name"
-                    description="Product Description"
-                    upvotes="200"
-                    reviews="12"
-                    views="12"
+                    key={product.product_id}
+                    id={product.product_id}
+                    name={product.name}
+                    description={product.tagline}
+                    reviews={product.reviews}
+                    views={product.views}
+                    upvotes={product.upvotes}
                 />
             ))}
         </div>

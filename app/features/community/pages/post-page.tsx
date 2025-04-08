@@ -91,12 +91,12 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                                 <div className="flex flex-col gap-5">
                                     {loaderData.replies.map((reply) => (
                                         <Reply
-                                            username={reply.user.name}
-                                            avatarUrl={reply.user.avatar}
+                                            username={reply.user?.name ?? 'Unknown User'}
+                                            avatarUrl={reply.user?.avatar ?? null}
                                             content={reply.reply}
                                             timestamp={reply.created_at}
                                             topLevel={true}
-                                            replies={reply.post_replies}
+                                            replies={Array.isArray(reply.post_replies) ? reply.post_replies : []}
                                         />
                                     ))}
                                 </div>
