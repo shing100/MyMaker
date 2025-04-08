@@ -51,7 +51,11 @@ export default function ProductOverviewLayout({ loaderData }: Route.ComponentPro
                     </div>
                 </div>
                 <div className="flex gap-5">
-                    <Button variant="secondary" size="lg" className="text-lg h-14 px-10">Visit Website</Button>
+                    <Button variant="secondary" size="lg" asChild className="text-lg h-14 px-10">
+                        <Link to={`/products/${loaderData.product.product_id}/visit`}>
+                            Visit Website
+                        </Link>
+                    </Button>
                     <Button size="lg" className="text-lg h-14 px-10"><ChevronUpIcon className="size-4" />
                         Upvote ({loaderData.product.upvotes})
                     </Button>
