@@ -9,11 +9,8 @@ import { cn } from "~/lib/utils";
 import type { Route } from "./+types/profile-layout";
 import { getUserProfile } from "../queries";
 
-export const meta: MetaFunction = () => {
-    return [
-        { title: "프로필 | MyMake" },
-        { name: "description", content: "사용자 프로필" },
-    ];
+export const meta: Route.MetaFunction = ({ data }) => {
+    return [{ title: `${data.user.name} | wemake` }];
 };
 
 
