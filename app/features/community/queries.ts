@@ -1,53 +1,15 @@
-// import db from "~/db"
-// import { posts, postUpvotes, topics } from "./schema"
-// import { count, eq } from "drizzle-orm";
-// import { profiles } from "../users/schema";
-
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { DateTime } from "luxon";
-import client from "~/supa-client"
+import type { Database } from "~/supa-client";
 
-
-// export const getTopics = async () => {
-//     const allTopics = await db
-//         .select({
-//             name: topics.name,
-//             slug: topics.slug,
-//         })
-//         .from(topics);
-//     return allTopics;
-// }
-
-
-// export const getPosts = async () => {
-//     const allPosts = await db
-//         .select({
-//             id: posts.post_id,
-//             title: posts.title,
-//             created_at: posts.created_at,
-//             topic: topics.name,
-//             auther: profiles.name,
-//             autherAvatarUrl: profiles.avatar,
-//             username: profiles.username,
-//             upvotes: count(postUpvotes.post_id),
-//         })
-//         .from(posts)
-//         .innerJoin(topics, eq(posts.topic_id, topics.topic_id))
-//         .innerJoin(profiles, eq(posts.profile_id, profiles.profile_id))
-//         .leftJoin(postUpvotes, eq(posts.post_id, postUpvotes.post_id))
-//         .groupBy(posts.post_id, topics.name, profiles.name, profiles.avatar, profiles.username)
-//         .orderBy(posts.post_id);
-//     return allPosts;
-// }
-
-
-export const getTopics = async () => {
+export const getTopics = async (client: SupabaseClient<Database>) => {
     // await new Promise((resolve) => setTimeout(resolve, 4000));
     const { data, error } = await client.from("topics").select("name, slug");
     if (error) throw new Error(error.message);
     return data;
 }
 
-export const getPosts = async ({
+export const getPosts = async (client: SupabaseClient<Database>, {
     limit,
     sorting,
     period = "all",
@@ -99,17 +61,17 @@ export const getPosts = async ({
 
 
 
-export const getPostById = async (postId: string) => {
+export const getPostById = async (client: SupabaseClient<Database>, postId: string) => {
     const { data, error } = await client
         .from("community_post_detail")
         .select("*")
-        .eq("post_id", postId)
+        .eq("post_id", Number(postId))
         .single();
     if (error) throw error;
     return data;
 };
 
-export const getReplies = async (postId: string) => {
+export const getReplies = async (client: SupabaseClient<Database>, postId: string) => {
     const replyQuery = `
      post_reply_id,
      reply,
@@ -130,7 +92,7 @@ export const getReplies = async (postId: string) => {
        )
        `
         )
-        .eq("post_id", postId);
+        .eq("post_id", Number(postId));
     if (error) throw error;
     return data;
 };

@@ -1,6 +1,6 @@
 import { useOutletContext, type MetaFunction } from "react-router";
-import client from "~/supa-client";
 import type { Route } from "./+types/profile-page";
+import { makeSSRClient } from "~/supa-client";
 
 interface Profile {
     profile_id: string;
@@ -13,8 +13,8 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-    // 사용자 ID 조회
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+    const { client, headers } = makeSSRClient(request);
     const { data: userData, error } = await client
         .from("profiles")
         .select("profile_id")

@@ -5,6 +5,7 @@ import { Button } from "~/common/components/ui/button";
 import { getJobById } from "../queries";
 import { DateTime } from "luxon";
 import type { Route } from "./+types/job-page";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: MetaFunction = () => {
     return [
@@ -13,8 +14,9 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-    const job = await getJobById(params.jobId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+    const { client, headers } = makeSSRClient(request);
+    const job = await getJobById(client, params.jobId);
     return { job };
 };
 

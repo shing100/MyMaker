@@ -8,6 +8,7 @@ import { getJobs } from "../queries";
 import type { Route } from "./+types/jobs-page";
 import { z } from "zod";
 import { URL } from "url";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: MetaFunction = () => {
     return [
@@ -29,7 +30,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     if (!success) {
         throw data({ error_code: "INVALID_SEARCH_PARAMS", error_message: "Invalid search params" }, { status: 400 });
     }
-    const jobs = await getJobs({ limit: 40, location: parsedData.location, type: parsedData.type, salary: parsedData.salary });
+    const { client, headers } = makeSSRClient(request);
+    const jobs = await getJobs(client, { limit: 40, location: parsedData.location, type: parsedData.type, salary: parsedData.salary });
     return { jobs };
 }
 

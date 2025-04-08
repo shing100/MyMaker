@@ -7,6 +7,7 @@ import { Button } from "~/common/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/common/components/ui/card";
 import { getTeamById } from "../queries";
 import type { Route } from "./+types/team-page";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: MetaFunction = () => {
     return [
@@ -16,8 +17,9 @@ export const meta: MetaFunction = () => {
 };
 
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-    const team = await getTeamById(params.teamId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+    const { client, headers } = makeSSRClient(request);
+    const team = await getTeamById(client, params.teamId);
     return { team };
 };
 
