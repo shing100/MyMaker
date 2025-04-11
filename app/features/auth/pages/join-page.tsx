@@ -7,6 +7,7 @@ import { makeSSRClient } from "~/supa-client";
 import { z } from "zod";
 import { checkUsernameExists } from "../queries";
 import { LoaderCircle } from "lucide-react";
+import SelectPair from "~/common/components/select-pair";
 
 export const meta: MetaFunction = () => {
     return [
@@ -20,6 +21,7 @@ const formSchema = z.object({
     username: z.string().min(2),
     email: z.string().email(),
     password: z.string().min(8),
+    role: z.enum(["entrepreneur", "investor", "designer", "developer", "other"]),
 });
 
 export const action = async ({ request }: Route.ActionArgs) => {
@@ -39,22 +41,52 @@ export const action = async ({ request }: Route.ActionArgs) => {
         };
     }
     const { client, headers } = makeSSRClient(request);
-    const { error: signUpError } = await client.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-            data: {
-                name: data.name,
+
+    try {
+        // 1. 먼저 사용자 계정 생성
+        const { data: authData, error: signUpError } = await client.auth.signUp({
+            email: data.email,
+            password: data.password,
+        });
+
+        if (signUpError) {
+            console.error("회원가입 오류:", signUpError);
+            return {
+                signUpError: `${signUpError.message} (Code: ${signUpError.code || "unknown"})`,
+            };
+        }
+
+        if (!authData.user) {
+            return {
+                signUpError: "사용자 계정은 만들어졌지만 유저 정보를 찾을 수 없습니다.",
+            };
+        }
+
+        // 2. 프로필 정보 직접 삽입
+        const { error: profileError } = await client
+            .from('profiles')
+            .upsert({
+                profile_id: authData.user.id,
                 username: data.username,
-            },
-        },
-    });
-    if (signUpError) {
+                name: data.name,
+                role: data.role
+            });
+
+        if (profileError) {
+            console.error("프로필 생성 오류:", profileError);
+            // 사용자 계정은 생성되었으나 프로필 생성에 실패했을 때 처리
+            return {
+                signUpError: `프로필 생성 중 오류가 발생했습니다: ${profileError.message}`,
+            };
+        }
+
+        return redirect("/", { headers });
+    } catch (error) {
+        console.error("예상치 못한 오류:", error);
         return {
-            signUpError: signUpError.message,
+            signUpError: "서버 오류가 발생했습니다. 나중에 다시 시도해주세요.",
         };
     }
-    return redirect("/", { headers });
 };
 
 export default function JoinPage({ actionData }: Route.ComponentProps) {
@@ -113,8 +145,22 @@ export default function JoinPage({ actionData }: Route.ComponentProps) {
                     {actionData && "formErrors" in actionData && (
                         <p className="text-red-500">{actionData?.formErrors?.password}</p>
                     )}
+                    <SelectPair
+                        label="직업"
+                        name="role"
+                        description="회원 유형을 선택해주세요"
+                        placeholder="선택하기"
+                        options={[
+                            { label: "Entrepreneur", value: "entrepreneur" },
+                            { label: "Investor", value: "investor" },
+                            { label: "Designer", value: "designer" },
+                            { label: "Developer", value: "developer" },
+                            { label: "Other", value: "other" }
+                        ]}
+                        required
+                    />
                     {actionData && "formErrors" in actionData && (
-                        <p className="text-red-500">{actionData?.formErrors?.password}</p>
+                        <p className="text-red-500">{actionData?.formErrors?.role}</p>
                     )}
                     <Button className="w-full" type="submit" disabled={isSubmitting}>
                         {isSubmitting ? (

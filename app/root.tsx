@@ -15,6 +15,7 @@ import Navigation from "./common/components/navigation";
 import { Settings } from "luxon";
 import { cn } from "./lib/utils";
 import { makeSSRClient } from "./supa-client";
+import { getUserById } from "./features/users/queries";
 
 
 export const links: Route.LinksFunction = () => [
@@ -55,7 +56,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { client } = makeSSRClient(request);
   const { data: { user } } = await client.auth.getUser();
-  return { user };
+  if (user) {
+    const profile = await getUserById(client, { id: user?.id });
+    return { user, profile };
+  }
+  return { user: null, profile: null };
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
@@ -72,7 +77,11 @@ export default function App({ loaderData }: Route.ComponentProps) {
       {pathname.startsWith("/auth") ? null : <Navigation
         isLoggedIn={isLoggedIn}
         hasNotifications={false}
-        hasMessages={false} />}
+        hasMessages={false}
+        username={loaderData.profile?.username}
+        avatar={loaderData.profile?.avatar_url}
+        name={loaderData.profile?.name}
+      />}
       <Outlet />
     </div>
   );
