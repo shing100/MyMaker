@@ -14,6 +14,7 @@ import stylesheet from "./app.css?url";
 import Navigation from "./common/components/navigation";
 import { Settings } from "luxon";
 import { cn } from "./lib/utils";
+import { makeSSRClient } from "./supa-client";
 
 
 export const links: Route.LinksFunction = () => [
@@ -51,10 +52,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
+  const { data: { user } } = await client.auth.getUser();
+  return { user };
+}
+
+export default function App({ loaderData }: Route.ComponentProps) {
   const { pathname } = useLocation();
   const navigation = useNavigation();
   const isLoading = navigation.state === "loading";
+  const isLoggedIn = loaderData.user !== null;
 
   return (
     <div className={cn({
@@ -62,7 +70,7 @@ export default function App() {
       "transition-opacity animate-pulse": isLoading,
     })}>
       {pathname.startsWith("/auth") ? null : <Navigation
-        isLoggedIn={true}
+        isLoggedIn={isLoggedIn}
         hasNotifications={false}
         hasMessages={false} />}
       <Outlet />
