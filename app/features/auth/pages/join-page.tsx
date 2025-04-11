@@ -87,7 +87,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
             signUpError: "서버 오류가 발생했습니다. 나중에 다시 시도해주세요.",
         };
     }
-};
+}
 
 export default function JoinPage({ actionData }: Route.ComponentProps) {
     const navigation = useNavigation();
