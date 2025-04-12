@@ -1,13 +1,35 @@
-import type { MetaFunction } from "react-router";
+import { z } from "zod";
+import { redirect } from "react-router";
+import { makeSSRClient } from "~/supa-client";
 import type { Route } from "./+types/social-start-page";
 
-export const meta: MetaFunction = () => {
-    return [
-        { title: "소셜 로그인" },
-        { name: "description", content: "소셜 로그인 시작 페이지" },
-    ];
-};
 
-export default function SocialStartPage({ }: Route.ComponentProps) {
-    return <div>소셜 로그인 시작 페이지</div>;
-} 
+const paramsSchema = z.object({
+    provider: z.enum(["github", "kakao"]),
+});
+
+
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+    const { success, data } = paramsSchema.safeParse(params);
+    if (!success) {
+        return redirect("/auth/login");
+    }
+    const { provider } = data;
+    const redirectTo = `http://localhost:5173/auth/social/${provider}/complete`;
+    const { client, headers } = makeSSRClient(request);
+    const {
+        data: { url },
+        error,
+    } = await client.auth.signInWithOAuth({
+        provider,
+        options: {
+            redirectTo,
+        },
+    });
+    if (url) {
+        return redirect(url, { headers });
+    }
+    if (error) {
+        throw error;
+    }
+};
