@@ -4,10 +4,11 @@ import InputPair from "~/common/components/input-pair";
 import { Button } from "~/common/components/ui/button";
 import AuthButtons from "../components/auth-buttons";
 import { makeSSRClient } from "~/supa-client";
-import { z } from "zod";
 import { checkUsernameExists } from "../queries";
 import { LoaderCircle } from "lucide-react";
 import SelectPair from "~/common/components/select-pair";
+import { formSchema, signUp } from "../mutations";
+import { z } from "zod";
 
 export const meta: MetaFunction = () => {
     return [
@@ -16,13 +17,6 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-const formSchema = z.object({
-    name: z.string().min(1),
-    username: z.string().min(2),
-    email: z.string().email(),
-    password: z.string().min(8),
-    role: z.enum(["entrepreneur", "investor", "designer", "developer", "other"]),
-});
 
 export const action = async ({ request }: Route.ActionArgs) => {
     const formData = await request.formData();
@@ -43,40 +37,11 @@ export const action = async ({ request }: Route.ActionArgs) => {
     const { client, headers } = makeSSRClient(request);
 
     try {
-        // 1. 먼저 사용자 계정 생성
-        const { data: authData, error: signUpError } = await client.auth.signUp({
-            email: data.email,
-            password: data.password,
-        });
+        const result = await signUp(client, data);
 
-        if (signUpError) {
-            console.error("회원가입 오류:", signUpError);
+        if ('error' in result) {
             return {
-                signUpError: `${signUpError.message} (Code: ${signUpError.code || "unknown"})`,
-            };
-        }
-
-        if (!authData.user) {
-            return {
-                signUpError: "사용자 계정은 만들어졌지만 유저 정보를 찾을 수 없습니다.",
-            };
-        }
-
-        // 2. 프로필 정보 직접 삽입
-        const { error: profileError } = await client
-            .from('profiles')
-            .upsert({
-                profile_id: authData.user.id,
-                username: data.username,
-                name: data.name,
-                role: data.role
-            });
-
-        if (profileError) {
-            console.error("프로필 생성 오류:", profileError);
-            // 사용자 계정은 생성되었으나 프로필 생성에 실패했을 때 처리
-            return {
-                signUpError: `프로필 생성 중 오류가 발생했습니다: ${profileError.message}`,
+                signUpError: result.error,
             };
         }
 

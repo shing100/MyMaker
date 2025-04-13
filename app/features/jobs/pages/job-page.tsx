@@ -1,5 +1,4 @@
 import { DotIcon } from "lucide-react";
-import type { MetaFunction } from "react-router";
 import { Badge } from "~/common/components/ui/badge";
 import { Button } from "~/common/components/ui/button";
 import { getJobById } from "../queries";
@@ -7,9 +6,11 @@ import { DateTime } from "luxon";
 import type { Route } from "./+types/job-page";
 import { makeSSRClient } from "~/supa-client";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = ({ data }) => {
     return [
-        { title: "채용 상세" },
+        {
+            title: `${data.job.position}채용 상세 | MyMake`,
+        },
         { name: "description", content: "채용 상세 정보" },
     ];
 };
