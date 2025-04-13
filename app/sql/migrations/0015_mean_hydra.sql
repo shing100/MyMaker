@@ -1,0 +1,1 @@
+ALTER TABLE "post_replies" ALTER COLUMN "content" DROP NOT NULL;

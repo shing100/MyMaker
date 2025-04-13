@@ -42,7 +42,7 @@ export const postReplies = pgTable("post_replies", {
     post_id: bigint({ mode: "number" }).references(() => posts.post_id, { onDelete: "cascade" }),
     parent_id: bigint({ mode: "number" }).references((): AnyPgColumn => postReplies.post_reply_id, { onDelete: "cascade" }),  // This is a self-referencing foreign key
     profile_id: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }).notNull(),
-    content: text().notNull(),
+    content: text(),
     reply: text().notNull(),
     created_at: timestamp().notNull().defaultNow(),
     updated_at: timestamp().notNull().defaultNow(),

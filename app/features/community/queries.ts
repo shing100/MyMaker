@@ -86,13 +86,14 @@ export const getReplies = async (client: SupabaseClient<Database>, postId: strin
         .from("post_replies")
         .select(
             `
-       ${replyQuery},
-       post_replies (
-         ${replyQuery}
-       )
-       `
+            ${replyQuery},
+            post_replies (
+                ${replyQuery}
+            )
+            `
         )
-        .eq("post_id", Number(postId));
+        .eq("post_id", Number(postId))
+        .order("created_at", { ascending: false });
     if (error) throw error;
     return data;
 };

@@ -394,7 +394,7 @@ export type Database = {
       }
       post_replies: {
         Row: {
-          content: string
+          content: string | null
           created_at: string
           parent_id: number | null
           post_id: number | null
@@ -404,7 +404,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          content: string
+          content?: string | null
           created_at?: string
           parent_id?: number | null
           post_id?: number | null
@@ -414,7 +414,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          content?: string
+          content?: string | null
           created_at?: string
           parent_id?: number | null
           post_id?: number | null
@@ -513,9 +513,9 @@ export type Database = {
           content: string
           created_at: string
           post_id: number
-          profile_id: string | null
+          profile_id: string
           title: string
-          topic_id: number | null
+          topic_id: number
           updated_at: string
           upvotes: number | null
         }
@@ -523,9 +523,9 @@ export type Database = {
           content: string
           created_at?: string
           post_id?: never
-          profile_id?: string | null
+          profile_id: string
           title: string
-          topic_id?: number | null
+          topic_id: number
           updated_at?: string
           upvotes?: number | null
         }
@@ -533,9 +533,9 @@ export type Database = {
           content?: string
           created_at?: string
           post_id?: never
-          profile_id?: string | null
+          profile_id?: string
           title?: string
-          topic_id?: number | null
+          topic_id?: number
           updated_at?: string
           upvotes?: number | null
         }
