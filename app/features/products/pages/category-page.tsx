@@ -4,7 +4,6 @@ import { ProductCard } from "../components/product-card";
 import ProductPagination from "~/common/components/product-pagination";
 import { getCategory, getCategoryPages, getProductsByCategory } from "../queries";
 import { z } from "zod";
-import { request } from "http";
 import { makeSSRClient } from "~/supa-client";
 
 

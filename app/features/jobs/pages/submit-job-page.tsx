@@ -26,14 +26,14 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const formSchema = z.object({
     position: z.string().max(40),
     overview: z.string().max(400),
-    responsibilities: z.string().max(400),
-    qualifications: z.string().max(400),
+    responsibilities: z.string().max(1000),
+    qualifications: z.string().max(1000),
     benefits: z.string().max(400),
     skills: z.string().max(400),
     companyName: z.string().max(40),
-    companyLogoUrl: z.string().max(40),
+    companyLogoUrl: z.string().url().max(4000),
     companyLocation: z.string().max(40),
-    applyUrl: z.string().max(40),
+    applyUrl: z.string().url().max(4000),
     jobType: z.enum(JOB_TYPES.map((type) => type.value) as [string, ...string[]]),
     jobLocation: z.enum(
         LOCATION_TYPES.map((location) => location.value) as [string, ...string[]]
