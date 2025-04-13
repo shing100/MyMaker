@@ -88,6 +88,7 @@ export function Reply({
             </div>
             {replying && (
                 <Form className="flex items-start gap-5 w-3/4" method="post">
+                    <input type="hidden" name="topLevelId" value={topLevelId} />
                     <Avatar className="size-14">
                         <AvatarFallback>{loggedInName[0]}</AvatarFallback>
                         <AvatarImage src={avatar} />
