@@ -5,6 +5,7 @@ import { profiles } from "../users/schema";
 export const gptIdeas = pgTable("gpt_ideas", {
     gpt_idea_id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
     idea: text().notNull(),
+    content: text(),
     views: integer().notNull().default(0),
     claimed_at: timestamp(),
     claimed_by: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }),

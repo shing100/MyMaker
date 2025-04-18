@@ -1,0 +1,1 @@
+ALTER TABLE "gpt_ideas" ADD COLUMN "content" text;

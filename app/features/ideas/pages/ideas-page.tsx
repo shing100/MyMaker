@@ -28,9 +28,9 @@ export default function IdeasPage({ loaderData }: Route.ComponentProps) {
                         key={idea.gpt_idea_id}
                         id={idea.gpt_idea_id}
                         title={idea.idea}
-                        views={idea.views}
-                        likes={idea.likes}
-                        createdAt={idea.created_at}
+                        viewsCount={idea.views}
+                        likesCount={idea.likes}
+                        postedAt={idea.created_at}
                         claimed={idea.is_claimed}
                     />
                 ))}
