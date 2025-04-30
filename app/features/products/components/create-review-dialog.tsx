@@ -1,15 +1,17 @@
 import { StarIcon } from "lucide-react";
 import { useState } from "react";
-import { Form } from "react-router";
+import { Form, useActionData } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import { Button } from "~/common/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/common/components/ui/dialog";
 import { Input } from "~/common/components/ui/input";
 import { Label } from "~/common/components/ui/label";
+import { action } from "../pages/product-reviews-page";
 
 export default function CreateReviewDialog() {
     const [rating, setRating] = useState<number>(0);
     const [hoveredStar, setHoveredStar] = useState<number>(0);
+    const actionData = useActionData<typeof action>();
     return (
         <DialogContent>
             <DialogHeader>
@@ -18,7 +20,7 @@ export default function CreateReviewDialog() {
             <DialogDescription>
                 Please share your thoughts with us.
             </DialogDescription>
-            <Form className="space-y-10">
+            <Form className="space-y-10" method="post">
                 <div>
                     <Label className="flex flex-col gap-1">
                         Rating
@@ -49,17 +51,28 @@ export default function CreateReviewDialog() {
                             </Label>
                         ))}
                     </div>
+                    {actionData?.formErrors?.rating && (
+                        <p className="text-red-500">
+                            {actionData.formErrors.rating.join(", ")}
+                        </p>
+                    )}
                 </div>
                 <InputPair
                     textArea
                     required
+                    name="review"
                     label="Review"
                     description="Please share your thoughts with us. Maximum 1000 characters."
                     maxLength={1000}
                     placeholder="Tell us more about your experience with this product."
                 />
+                {actionData?.formErrors?.review && (
+                    <p className="text-red-500">
+                        {actionData.formErrors.review.join(", ")}
+                    </p>
+                )}
                 <DialogFooter>
-                    <Button type="submit">Submit review</Button>
+                    <Button>Submit review</Button>
                 </DialogFooter>
             </Form>
         </DialogContent>
