@@ -8,7 +8,8 @@ export default function SelectPair({
     label,
     description,
     placeholder,
-    options
+    options,
+    defaultValue
 }: {
     name: string;
     required: boolean;
@@ -19,6 +20,7 @@ export default function SelectPair({
         label: string;
         value: string;
     }[];
+    defaultValue?: string;
 }) {
     const [open, setOpen] = useState(false);
     return (
@@ -34,6 +36,7 @@ export default function SelectPair({
                 required={required}
                 open={open}
                 onOpenChange={setOpen}
+                defaultValue={defaultValue}
             >
                 <SelectTrigger>
                     <SelectValue placeholder={placeholder} />
@@ -42,7 +45,7 @@ export default function SelectPair({
                     <SelectGroup>
                         <SelectLabel>{label}</SelectLabel>
                         {options.map((option) => (
-                            <SelectItem value={option.value}>{option.label}</SelectItem>
+                            <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                         ))}
                     </SelectGroup>
                 </SelectContent>

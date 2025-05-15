@@ -1,4 +1,3 @@
-
 import type { MetaFunction } from "react-router";
 import type { Route } from "./+types/dashboard-product-page";
 import { Card, CardContent, CardHeader, CardTitle } from "~/common/components/ui/card";
@@ -24,7 +23,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
         .from("products")
         .select("product_id")
         .eq("profile_id", userId)
-        .eq("product_id", params.productId)
+        .eq("product_id", parseInt(params.productId, 10))
         .single();
     if (error) {
         throw redirect("/my/dashboard/products");
