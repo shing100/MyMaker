@@ -10,6 +10,8 @@ import { getTopics } from "../queries"
 import { z } from "zod"
 import { createPost } from "../mutations"
 import { LoaderCircle } from "lucide-react"
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 export const meta: MetaFunction = () => {
     return [
@@ -58,6 +60,17 @@ export const action = async ({ request }: Route.ActionArgs) => {
 export default function SubmitPostPage({ loaderData, actionData }: Route.ComponentProps) {
     const navigation = useNavigation();
     const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
+
+    useEffect(() => {
+        if (actionData?.fieldErrors) {
+            // 모든 필드 오류를 토스트로 표시
+            Object.entries(actionData.fieldErrors).forEach(([field, messages]) => {
+                if (messages) {
+                    toast.error(`${field} 오류: ${messages.join(', ')}`);
+                }
+            });
+        }
+    }, [actionData]);
 
     return (
         <div className="space-y-10">

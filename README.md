@@ -114,3 +114,4 @@ npm run build
 
 ## Storage Policy
 - bucket_id = 'avatars' AND (storage.foldername(name))[1] = (auth.uid())::text
+- ((bucket_id = 'icons'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))

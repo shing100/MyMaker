@@ -1,8 +1,8 @@
-import { Form, type MetaFunction } from "react-router";
+import { Form, type MetaFunction, useNavigation } from "react-router";
 import type { Route } from "./+types/settings-page";
 import InputPair from "~/common/components/input-pair";
 import SelectPair from "~/common/components/select-pair";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "~/common/components/ui/label";
 import { Input } from "~/common/components/ui/input";
 import { Button } from "~/common/components/ui/button";
@@ -11,6 +11,8 @@ import { getLoggedInUserId, getUserById } from "../queries";
 import { z } from "zod";
 import { updateUser, updateUserAvatar } from "../mutations";
 import { Alert, AlertDescription, AlertTitle } from "~/common/components/ui/alert";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export const meta: MetaFunction = () => {
     return [
@@ -81,16 +83,31 @@ export const action = async ({ request }: Route.ActionArgs) => {
     }
 }
 
-
-
 export default function SettingsPage({ loaderData, actionData }: Route.ComponentProps) {
     const [avatar, setAvatar] = useState<string | null>(loaderData.user.avatar ?? null);
+    const navigation = useNavigation();
+
+    // 아바타 폼 제출 상태 확인
+    const isAvatarUploading = navigation.state === 'submitting' && navigation.formData?.has('avatar');
+
+    // actionData 변경 감지 및 토스트 메시지 표시
+    useEffect(() => {
+        if (actionData?.ok) {
+            toast("프로필이 업데이트되었습니다.");
+        } else if (actionData?.formErrors && 'avatar' in actionData.formErrors && actionData.formErrors.avatar) {
+            toast.error(actionData.formErrors.avatar.join(", "));
+        } else if (actionData?.formErrors) {
+            // 다른 폼의 오류는 다른 곳에서 처리
+        }
+    }, [actionData]);
+
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const file = event.target.files[0];
             setAvatar(URL.createObjectURL(file));
         }
     }
+
     return (
         <div className="space-y-20">
             <div className="grid grid-cols-6 gap-40">
@@ -220,7 +237,20 @@ export default function SettingsPage({ loaderData, actionData }: Route.Component
                                 Max file size: 1MB
                             </span>
                         </div>
-                        <Button type="submit" className="w-full">Update Avatar</Button>
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={isAvatarUploading} // 아바타 업로드 중 비활성화
+                        >
+                            {isAvatarUploading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    업로드 중...
+                                </>
+                            ) : (
+                                "아바타 업데이트"
+                            )}
+                        </Button>
                     </div>
                 </Form>
             </div>

@@ -1,5 +1,4 @@
-
-import { Form, redirect, type MetaFunction } from "react-router";
+import { Form, redirect, useNavigation, type MetaFunction } from "react-router";
 import { Hero } from "~/common/components/hero";
 import InputPair from "~/common/components/input-pair";
 import SelectPair from "~/common/components/select-pair";
@@ -10,6 +9,9 @@ import { getLoggedInUserId } from "~/features/users/queries";
 import type { Route } from "./+types/submit-job-page";
 import { z } from "zod";
 import { createJob } from "../mutations";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export const meta: MetaFunction = () => {
     return [
@@ -60,6 +62,20 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 
 export default function SubmitJobPage({ actionData }: Route.ComponentProps) {
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
+
+    useEffect(() => {
+        if (actionData && "fieldErrors" in actionData && actionData.fieldErrors) {
+            // 모든 필드 오류를 토스트로 표시
+            Object.entries(actionData.fieldErrors).forEach(([field, messages]) => {
+                if (messages && messages.length > 0) {
+                    toast.error(`${field} 오류: ${messages.join(', ')}`);
+                }
+            });
+        }
+    }, [actionData]);
+
     return (
         <div>
             <Hero
@@ -236,7 +252,16 @@ export default function SubmitJobPage({ actionData }: Route.ComponentProps) {
                         <p className="text-red-500">{actionData.fieldErrors.salaryRange}</p>
                     )}
                 </div>
-                <Button type="submit" size="lg" className="w-full max-w-sm">Post job for $100</Button>
+                <Button type="submit" size="lg" className="w-full max-w-sm" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            등록 중...
+                        </>
+                    ) : (
+                        "Post job for $100"
+                    )}
+                </Button>
             </Form>
         </div>
     );

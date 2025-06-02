@@ -1,10 +1,10 @@
 import { Hero } from "~/common/components/hero";
-import { Form, redirect } from "react-router";
+import { Form, redirect, useNavigation } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import SelectPair from "~/common/components/select-pair";
 import { Input } from "~/common/components/ui/input";
 import { Label } from "~/common/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "~/common/components/ui/button";
 import type { Route } from "./+types/submit-product-page";
 import { makeSSRClient } from "~/supa-client";
@@ -12,7 +12,8 @@ import { getLoggedInUserId } from "~/features/users/queries";
 import { z } from "zod";
 import { createProduct } from "../mutations";
 import { getCategories } from "../queries";
-
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export const meta: Route.MetaFunction = () => {
     return [
@@ -42,6 +43,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
         return { formErrors: error.flatten().fieldErrors };
     }
     const { icon, ...rest } = data;
+
     const { data: uploadData, error: uploadError } = await client.storage.from("icons").upload(`${userId}/${Date.now()}`, icon, {
         contentType: icon.type,
         upsert: false,
@@ -72,6 +74,20 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export default function SubmitPage({ loaderData, actionData }: Route.ComponentProps) {
     const [icon, setIcon] = useState<string | null>(null);
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
+
+    useEffect(() => {
+        if (actionData && "formErrors" in actionData && actionData.formErrors) {
+            // 모든 필드 오류를 토스트로 표시
+            Object.entries(actionData.formErrors).forEach(([field, messages]) => {
+                if (messages && messages.length > 0) {
+                    toast.error(`${field} 오류: ${messages.join(', ')}`);
+                }
+            });
+        }
+    }, [actionData]);
+
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const file = event.target.files[0];
@@ -173,8 +189,15 @@ export default function SubmitPage({ loaderData, actionData }: Route.ComponentPr
                         actionData?.formErrors?.category && (
                             <p className="text-red-500">{actionData.formErrors.category}</p>
                         )}
-                    <Button type="submit" className="w-full" size="lg">
-                        Submit
+                    <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                제출 중...
+                            </>
+                        ) : (
+                            "Submit"
+                        )}
                     </Button>
                 </div>
                 <div className="flex flex-col space-y-2">

@@ -16,7 +16,7 @@ import { Settings } from "luxon";
 import { cn } from "./lib/utils";
 import { makeSSRClient } from "./supa-client";
 import { getUserById } from "./features/users/queries";
-
+import { Toaster } from "./common/components/ui/sonner"
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -46,6 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <main>{children}</main>
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>
