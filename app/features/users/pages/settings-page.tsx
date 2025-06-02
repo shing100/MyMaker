@@ -12,7 +12,6 @@ import { z } from "zod";
 import { updateUser, updateUserAvatar } from "../mutations";
 import { Alert, AlertDescription, AlertTitle } from "~/common/components/ui/alert";
 
-
 export const meta: MetaFunction = () => {
     return [
         { title: "Settings | MyMake" },
@@ -43,9 +42,9 @@ export const action = async ({ request }: Route.ActionArgs) => {
         if (avatar.size <= 2097152 && avatar.type.startsWith("image/")) {
             const { data, error } = await client.storage
                 .from("avatars")
-                .upload(userId, avatar, {
+                .upload(`${userId}/${Date.now()}`, avatar, {
                     contentType: avatar.type,
-                    upsert: true,
+                    upsert: false,
                 });
             if (error) {
                 console.log(error);
@@ -85,7 +84,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 
 export default function SettingsPage({ loaderData, actionData }: Route.ComponentProps) {
-    const [avatar, setAvatar] = useState<string | null>(null);
+    const [avatar, setAvatar] = useState<string | null>(loaderData.user.avatar ?? null);
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const file = event.target.files[0];
