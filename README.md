@@ -112,4 +112,5 @@ npm run build
 
 ---
 
-위메이크 팀이 ❤️를 담아 개발했습니다.
+## Storage Policy
+- bucket_id = 'avatars' AND (storage.foldername(name))[1] = (auth.uid())::text
