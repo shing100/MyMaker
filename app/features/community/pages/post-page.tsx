@@ -14,6 +14,7 @@ import { z } from "zod"
 import { getLoggedInUserId } from "~/features/users/queries"
 import { createReply } from "../mutations"
 import { useEffect, useRef } from "react"
+import { cn } from "~/lib/utils"
 
 export const meta: Route.MetaFunction = ({ data }) => {
     return [{ title: `${data.post.title} on ${data.post.topic_name} | MyMake` }];
@@ -102,7 +103,13 @@ export default function PostPage({ loaderData, actionData }: Route.ComponentProp
             <div className="grid grid-cols-6 gap-20 items-start">
                 <div className="col-span-4 space-y-10">
                     <div className="flex w-full items-start gap-10">
-                        <Button variant="outline" className="flex flex-col h-14">
+                        <Button
+                            variant="outline"
+                            className={cn(
+                                "flex flex-col h-14",
+                                loaderData.post.is_upvoted ? "border-primary text-primary" : ""
+                            )}
+                        >
                             <ChevronUpIcon className="size-4 shrink-0" />
                             <span>{loaderData.post.upvotes}</span>
                         </Button>

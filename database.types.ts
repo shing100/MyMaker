@@ -91,6 +91,7 @@ export type Database = {
         Row: {
           claimed_at: string | null
           claimed_by: string | null
+          content: string | null
           created_at: string
           gpt_idea_id: number
           idea: string
@@ -99,6 +100,7 @@ export type Database = {
         Insert: {
           claimed_at?: string | null
           claimed_by?: string | null
+          content?: string | null
           created_at?: string
           gpt_idea_id?: never
           idea: string
@@ -107,6 +109,7 @@ export type Database = {
         Update: {
           claimed_at?: string | null
           claimed_by?: string | null
+          content?: string | null
           created_at?: string
           gpt_idea_id?: never
           idea?: string
@@ -605,7 +608,7 @@ export type Database = {
       }
       products: {
         Row: {
-          category_id: number | null
+          category_id: number
           created_at: string
           description: string
           how_it_works: string
@@ -619,7 +622,7 @@ export type Database = {
           url: string
         }
         Insert: {
-          category_id?: number | null
+          category_id: number
           created_at?: string
           description: string
           how_it_works: string
@@ -633,7 +636,7 @@ export type Database = {
           url: string
         }
         Update: {
-          category_id?: number | null
+          category_id?: number
           created_at?: string
           description?: string
           how_it_works?: string
@@ -653,6 +656,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["category_id"]
+          },
+          {
+            foreignKeyName: "products_profile_id_profiles_profile_id_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
           },
           {
             foreignKeyName: "products_to_profiles"
@@ -708,8 +718,8 @@ export type Database = {
       reviews: {
         Row: {
           created_at: string
-          product_id: number | null
-          profile_id: string | null
+          product_id: number
+          profile_id: string
           rating: number
           review: string
           review_id: number
@@ -717,8 +727,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          product_id?: number | null
-          profile_id?: string | null
+          product_id: number
+          profile_id: string
           rating: number
           review: string
           review_id?: never
@@ -726,8 +736,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          product_id?: number | null
-          profile_id?: string | null
+          product_id?: number
+          profile_id?: string
           rating?: number
           review?: string
           review_id?: never
@@ -835,6 +845,7 @@ export type Database = {
           author_role: Database["public"]["Enums"]["role"] | null
           content: string | null
           created_at: string | null
+          is_upvoted: boolean | null
           post_id: number | null
           products: number | null
           replies: number | null
@@ -852,6 +863,7 @@ export type Database = {
           author_avatar: string | null
           author_username: string | null
           created_at: string | null
+          is_upvoted: boolean | null
           post_id: number | null
           title: string | null
           topic: string | null
@@ -890,18 +902,14 @@ export type Database = {
     }
     Functions: {
       get_dashboard_stats: {
-        Args: {
-          user_id: string
-        }
+        Args: { user_id: string }
         Returns: {
           views: number
           month: string
         }[]
       }
       get_product_stats: {
-        Args: {
-          product_id: string
-        }
+        Args: { product_id: string }
         Returns: {
           product_views: number
           product_visits: number
@@ -924,13 +932,13 @@ export type Database = {
       product_stage: "idea" | "prototype" | "mvp" | "launched"
       role: "entrepreneur" | "investor" | "designer" | "developer" | "other"
       salary_range:
-      | "$0 - $50,000"
-      | "$50,000 - $70,000"
-      | "$70,000 - $100,000"
-      | "$100,000 - $150,000"
-      | "$150,000 - $200,000"
-      | "$200,000 - $250,000"
-      | "$250,000+"
+        | "$0 - $50,000"
+        | "$50,000 - $70,000"
+        | "$70,000 - $100,000"
+        | "$100,000 - $150,000"
+        | "$150,000 - $200,000"
+        | "$200,000 - $250,000"
+        | "$250,000+"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -942,106 +950,106 @@ type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-  | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-  | { schema: keyof Database },
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database
   }
-  ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-    Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-  : never = never,
+    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
   ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-    Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
-  ? R
-  : never
+    ? R
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-    DefaultSchema["Views"])
-  ? (DefaultSchema["Tables"] &
-    DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-      Row: infer R
-    }
-  ? R
-  : never
-  : never
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-  | keyof DefaultSchema["Tables"]
-  | { schema: keyof Database },
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database
   }
-  ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-  : never = never,
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
   ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-    Insert: infer I
-  }
-  ? I
-  : never
+      Insert: infer I
+    }
+    ? I
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-    Insert: infer I
-  }
-  ? I
-  : never
-  : never
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-  | keyof DefaultSchema["Tables"]
-  | { schema: keyof Database },
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database
   }
-  ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-  : never = never,
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
   ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-    Update: infer U
-  }
-  ? U
-  : never
+      Update: infer U
+    }
+    ? U
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-    Update: infer U
-  }
-  ? U
-  : never
-  : never
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-  | keyof DefaultSchema["Enums"]
-  | { schema: keyof Database },
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof Database },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof Database
   }
-  ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-  : never = never,
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
   ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-  : never
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-  | keyof DefaultSchema["CompositeTypes"]
-  | { schema: keyof Database },
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
   }
-  ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-  : never = never,
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-  : never
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
 
 export const Constants = {
   public: {
