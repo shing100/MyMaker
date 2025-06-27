@@ -88,7 +88,7 @@ export default function ProductReviewsPage({ loaderData, actionData }: Route.Com
                     ))}
                 </div>
             </div>
-            <CreateReviewDialog />
+            <CreateReviewDialog actionData={actionData} />
         </Dialog>
     );
 } 

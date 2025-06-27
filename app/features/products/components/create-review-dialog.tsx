@@ -1,17 +1,19 @@
 import { StarIcon } from "lucide-react";
 import { useState } from "react";
-import { Form, useActionData } from "react-router";
+import { Form } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import { Button } from "~/common/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/common/components/ui/dialog";
 import { Input } from "~/common/components/ui/input";
 import { Label } from "~/common/components/ui/label";
-import { action } from "../pages/product-reviews-page";
 
-export default function CreateReviewDialog() {
+interface CreateReviewDialogProps {
+    actionData?: any;
+}
+
+export default function CreateReviewDialog({ actionData }: CreateReviewDialogProps) {
     const [rating, setRating] = useState<number>(0);
     const [hoveredStar, setHoveredStar] = useState<number>(0);
-    const actionData = useActionData<typeof action>();
     return (
         <DialogContent>
             <DialogHeader>

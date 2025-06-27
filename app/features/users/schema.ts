@@ -27,8 +27,8 @@ export const profiles = pgTable("profiles", {
 
 
 export const follows = pgTable("follows", {
-    follower_id: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }),
-    following_id: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }),
+    follower_id: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }).notNull(),
+    following_id: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }).notNull(),
     created_at: timestamp().notNull().defaultNow(),
 })
 
@@ -46,6 +46,7 @@ export const notifications = pgTable("notifications", {
     post_id: bigint({ mode: "number" }).references(() => posts.post_id, { onDelete: "cascade" }),
     target_id: uuid().references(() => profiles.profile_id, { onDelete: "cascade" }).notNull(),
     message: text().notNull(),
+    seen: boolean().notNull().default(false),
     type: notificationType().notNull(),
     created_at: timestamp().notNull().defaultNow(),
 })

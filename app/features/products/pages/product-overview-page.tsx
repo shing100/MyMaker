@@ -1,6 +1,6 @@
 import { useOutletContext } from "react-router";
-import type { Route } from "./+types/product-overview-page.types";
 import { makeSSRClient } from "~/supa-client";
+import type { Route } from "./+types/product-overview-page";
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
     const { client, headers } = makeSSRClient(request);
