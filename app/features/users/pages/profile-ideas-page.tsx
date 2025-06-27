@@ -18,11 +18,11 @@ export default function ProfileIdeasPage() {
                     key={index}
                     id={index}
                     title="A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progesss using a mobile app to track workouts and progress as well as a website to track progress and see your stats."
-                    views={123}
-                    likes={123}
-                    createdAt="12 hours ago"
+                    viewsCount={123}
+                    likesCount={123}
+                    postedAt="12 hours ago"
                     claimed
-                    isOwner
+                    owner
                 />
             ))}
         </div>

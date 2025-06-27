@@ -29,6 +29,7 @@ export default function NotificationsPage({ loaderData, actionData }: Route.Comp
                 {loaderData.notifications
                     .map((notification) => (
                         <NotificationCard
+                            id={notification.notification_id}
                             key={notification.notification_id}
                             avatarUrl={notification.source?.avatar ?? ""}
                             avatarFallback={notification.source?.name?.[0] ?? ""}

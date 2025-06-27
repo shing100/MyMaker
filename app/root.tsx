@@ -15,7 +15,7 @@ import Navigation from "./common/components/navigation";
 import { Settings } from "luxon";
 import { cn } from "./lib/utils";
 import { makeSSRClient } from "./supa-client";
-import { getUserById } from "./features/users/queries";
+import { countNotifications, getUserById } from "./features/users/queries";
 import { Toaster } from "./common/components/ui/sonner"
 
 export const links: Route.LinksFunction = () => [
@@ -57,11 +57,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { client } = makeSSRClient(request);
   const { data: { user } } = await client.auth.getUser();
-  if (user) {
-    const profile = await getUserById(client, { id: user?.id });
-    return { user, profile };
+  if (user && user.id) {
+    const profile = await getUserById(client, { id: user.id });
+    const count = await countNotifications(client, { userId: user.id });
+    return { user, profile, notificationsCount: count };
   }
-  return { user: null, profile: null };
+  return { user: null, profile: null, notificationsCount: 0 };
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
@@ -77,7 +78,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
     })}>
       {pathname.startsWith("/auth") ? null : <Navigation
         isLoggedIn={isLoggedIn}
-        hasNotifications={false}
+        hasNotifications={loaderData.notificationsCount > 0}
         hasMessages={false}
         username={loaderData.profile?.username}
         avatar={loaderData.profile?.avatar}
