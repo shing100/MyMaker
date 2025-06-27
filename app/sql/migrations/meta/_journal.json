@@ -141,6 +141,20 @@
       "when": 1751021313474,
       "tag": "0020_nifty_xorn",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1751022501846,
+      "tag": "0021_fearless_whistler",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1751023286237,
+      "tag": "0022_faithful_midnight",
+      "breakpoints": true
     }
   ]
 }
