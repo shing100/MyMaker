@@ -10,8 +10,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     } = await client.auth.getUser();
     if (user) {
         const profile = await getUserById(client, { id: user.id });
-        const encodedUsername = encodeURIComponent(profile.username);
-        return redirect(`/users/${encodedUsername}`);
+        return redirect(`/users/${encodeURIComponent(profile.username)}`);
     }
     return redirect("/auth/login");
 }

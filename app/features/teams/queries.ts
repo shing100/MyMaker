@@ -34,7 +34,8 @@ export const getTeamById = async (client: SupabaseClient<Database>, teamId: stri
        team_leader:profiles!inner(
          name,
          avatar,
-         role
+         role,
+         username
        )
        `
         )

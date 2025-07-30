@@ -155,6 +155,13 @@
       "when": 1751023286237,
       "tag": "0022_faithful_midnight",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1753886004233,
+      "tag": "0023_silky_patch",
+      "breakpoints": true
     }
   ]
 }
