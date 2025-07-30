@@ -116,9 +116,8 @@ export default function TeamPage({ loaderData }: Route.ComponentProps) {
                             required
                             textArea
                         />
+                        <Button type="submit" className="w-full">Get in touch</Button>
                     </Form>
-                    <Button type="submit" className="w-full">Get in touch</Button>
-                    <Button variant="outline" className="w-full">Follow</Button>
                 </aside>
             </div>
         </div>
