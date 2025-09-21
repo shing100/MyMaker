@@ -10,9 +10,10 @@ import {
     getLoggedInUserId,
     getMessagesByMessagesRoomId,
     getRoomsParticipant,
+    sendMessageToRoom,
 } from "../queries";
-import { getMessages } from "../queries";
 import { makeSSRClient } from "~/supa-client";
+import { useEffect, useRef } from "react";
 
 export const meta: MetaFunction = () => {
     return [
@@ -38,8 +39,29 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
     };
 };
 
+export const action = async ({ request, params }: Route.ActionArgs) => {
+    const { client } = await makeSSRClient(request);
+    const userId = await getLoggedInUserId(client);
+    const formData = await request.formData();
+    const message = formData.get("message");
+    await sendMessageToRoom(client, {
+        messageRoomId: params.messageRoomId,
+        message: message as string,
+        userId,
+    });
+    return {
+        ok: true,
+    };
+};
+
 export default function MessagePage({ loaderData, actionData }: Route.ComponentProps) {
     const { userId } = useOutletContext<{ userId: string }>();
+    const formRef = useRef<HTMLFormElement>(null);
+    useEffect(() => {
+        if (actionData?.ok) {
+            formRef.current?.reset();
+        }
+    }, [actionData]);
     return (
         <div className="h-full flex flex-col justify-between">
             <Card>
@@ -71,8 +93,12 @@ export default function MessagePage({ loaderData, actionData }: Route.ComponentP
             </div>
             <Card>
                 <CardHeader>
-                    <Form className="relative flex justify-end items-center">
-                        <Textarea placeholder="메시지를 입력하세요" rows={2} className="resize-none" />
+                    <Form
+                        ref={formRef}
+                        method="post"
+                        className="relative flex justify-end items-center"
+                    >
+                        <Textarea placeholder="메시지를 입력하세요" rows={2} className="resize-none" required name="message" />
                         <Button size="icon" type="submit" className="absolute right-2">
                             <SendIcon className="size-4" />
                         </Button>
