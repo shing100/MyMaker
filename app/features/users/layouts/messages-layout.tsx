@@ -15,7 +15,11 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function MessagesLayout({ loaderData }: Route.ComponentProps) {
-    const { userId } = useOutletContext<{ userId: string }>();
+    const { userId, name, avatar } = useOutletContext<{
+        userId: string;
+        name: string;
+        avatar: string;
+    }>();
     return (
         <SidebarProvider className="max-h-[calc(100vh-14rem)] overflow-hidden min-h-full h-[calc(100vh-14rem)]">
             <Sidebar className="pt-16" variant="floating">
@@ -36,7 +40,7 @@ export default function MessagesLayout({ loaderData }: Route.ComponentProps) {
                 </SidebarContent>
             </Sidebar>
             <div className="w-full flex-1">
-                <Outlet context={{ userId }} />
+                <Outlet context={{ userId, name, avatar }} />
             </div>
         </SidebarProvider>
     );

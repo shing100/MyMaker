@@ -180,7 +180,7 @@ export const getMessagesByMessagesRoomId = async (
     const { count, error: countError } = await client
         .from("message_room_members")
         .select("*", { count: "exact", head: true })
-        .eq("message_room_id", messageRoomId)
+        .eq("message_room_id", Number(messageRoomId))
         .eq("profile_id", userId);
     if (countError) {
         throw countError;
@@ -191,15 +191,10 @@ export const getMessagesByMessagesRoomId = async (
     const { data, error } = await client
         .from("messages")
         .select(
-            `*,
-      sender:profiles!sender_id!inner(
-        name,
-        profile_id,
-        avatar
-      )
-      `
+            `*
+            `
         )
-        .eq("message_room_id", messageRoomId)
+        .eq("message_room_id", Number(messageRoomId))
         .order("created_at", { ascending: true });
     if (error) {
         throw error;
@@ -214,7 +209,7 @@ export const getRoomsParticipant = async (
     const { count, error: countError } = await client
         .from("message_room_members")
         .select("*", { count: "exact", head: true })
-        .eq("message_room_id", messageRoomId)
+        .eq("message_room_id", Number(messageRoomId))
         .eq("profile_id", userId);
     if (countError) {
         throw countError;
@@ -228,11 +223,12 @@ export const getRoomsParticipant = async (
             `
       profile:profiles!profile_id!inner(
         name,
+        profile_id,
         avatar
       )
       `
         )
-        .eq("message_room_id", messageRoomId)
+        .eq("message_room_id", Number(messageRoomId))
         .neq("profile_id", userId)
         .single();
     if (error) {
@@ -253,7 +249,7 @@ export const sendMessageToRoom = async (
     const { count, error: countError } = await client
         .from("message_room_members")
         .select("*", { count: "exact", head: true })
-        .eq("message_room_id", messageRoomId)
+        .eq("message_room_id", Number(messageRoomId))
         .eq("profile_id", userId);
     if (countError) {
         throw countError;
